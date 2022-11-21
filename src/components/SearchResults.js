@@ -1,6 +1,6 @@
-import { StyleSheet, Text, Image, View } from "react-native";
+import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SearchResults = ({ imagesrc, handleSearchReults }) => {
   const handlePress = () => {};
@@ -16,7 +16,6 @@ const SearchResults = ({ imagesrc, handleSearchReults }) => {
         <Text>Food Name</Text>
         <Text>Food Description</Text>
         <Text>Food Price</Text>
-        <Text>Food Rating</Text>
         <Text>Food Rating</Text>
       </View>
     </TouchableOpacity>

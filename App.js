@@ -31,10 +31,11 @@ const DrawerTut = () => {
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Map">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="Map" component={Map} />
         <Stack.Screen
           name="Drawer"
           component={DrawerTut}

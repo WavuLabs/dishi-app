@@ -7,11 +7,12 @@ import {
   View,
   StyleSheet,
   Button,
+  TouchableOpacity,
 } from "react-native";
 import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
@@ -23,6 +24,32 @@ const Map = () => {
 
   const origin = { latitude: -0.2761213, longitude: 36.054829 };
   const destination = { latitude: -0.2871213, longitude: 36.0854829 };
+
+  const mapViewRef = React.useRef(null);
+
+  const moveCamera = async () => {
+    const camera = await mapViewRef.current?.getCamera();
+    if (camera) {
+      camera.center = {
+        latitude: -0.2761213,
+        longitude: 36.054829,
+      };
+      mapViewRef.current?.animateCamera(camera, { duration: 2000 });
+    } //if camera
+    console.log("Moved");
+  };
+
+  const { width, height } = Dimensions.get("window");
+  const ASPECT_RATIO = width / height;
+  const LATITUDE_DELTA = 0.0922;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+  const initialRegion = {
+    latitude: -0.2761213,
+    longitude: 36.054829,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
+  };
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -46,19 +73,20 @@ const Map = () => {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
-    console.log(currLocation);
+    // console.log(currLocation);
   }
   return (
     <View style={styles.container}>
       {currLocation ? (
         <>
           <MapView
+            ref={mapViewRef}
             style={styles.map}
             initialRegion={{
               latitude: currLocation.latitude,
               longitude: currLocation.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
             }}
           >
             <Marker coordinate={origin} />
@@ -72,9 +100,9 @@ const Map = () => {
               mode={modeDirections}
               optimizeWaypoints={true}
               onStart={(params) => {
-                console.log(
-                  `Started routing between "${params.origin}" and "${params.destination}"`
-                );
+                // console.log(
+                //   `Started routing between "${params.origin}" and "${params.destination}"`
+                // );
               }}
               onReady={(result) => {
                 setDistanceRem(`Distance: ${result.distance} km`);
@@ -85,6 +113,7 @@ const Map = () => {
               }}
             />
           </MapView>
+
           <View style={styles.searchContainer}>
             <Text>{DistanceRem}</Text>
             <Text>{DurationRem}</Text>
@@ -104,6 +133,9 @@ const Map = () => {
                 }}
               >
                 <Text style={{}}>Driving</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={moveCamera}>
+                <Text style={{}}>moveCamera</Text>
               </TouchableOpacity>
             </View>
           </View>
