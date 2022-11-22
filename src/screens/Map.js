@@ -30,25 +30,29 @@ const Map = () => {
   const moveCamera = async () => {
     const camera = await mapViewRef.current?.getCamera();
     if (camera) {
-      camera.center = {
-        latitude: -0.2761213,
-        longitude: 36.054829,
-      };
-      mapViewRef.current?.animateCamera(camera, { duration: 2000 });
+      camera.center = origin;
+      mapViewRef.current?.animateCamera(camera, { duration: 1000 });
     } //if camera
     console.log("Moved");
+  };
+  const edgePaddingConst = {
+    top: 50,
+    right: 50,
+    bottom: 50,
+    left: 50,
+  };
+
+  const handleTraceRoute = () => {
+    mapViewRef.current?.fitToCoordinates([origin, destination], {
+      edgePadding: edgePaddingConst,
+      animated: true,
+    });
   };
 
   const { width, height } = Dimensions.get("window");
   const ASPECT_RATIO = width / height;
   const LATITUDE_DELTA = 0.0922;
   const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-  const initialRegion = {
-    latitude: -0.2761213,
-    longitude: 36.054829,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  };
 
   useEffect(() => {
     (async () => {
@@ -103,10 +107,12 @@ const Map = () => {
                 // console.log(
                 //   `Started routing between "${params.origin}" and "${params.destination}"`
                 // );
+                handleTraceRoute();
+
               }}
               onReady={(result) => {
-                setDistanceRem(`Distance: ${result.distance} km`);
-                setDurationRem(`Duration: ${result.duration} min.`);
+                setDistanceRem(`Distance: ${result.distance.toFixed(3)} km`);
+                setDurationRem(`Duration: ${Math.ceil(result.duration)} min.`);
               }}
               onError={(errorMessage) => {
                 console.log(errorMessage);
@@ -136,6 +142,12 @@ const Map = () => {
               </TouchableOpacity>
               <TouchableOpacity style={styles.button} onPress={moveCamera}>
                 <Text style={{}}>moveCamera</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleTraceRoute}
+              >
+                <Text style={{}}>TraceRoute</Text>
               </TouchableOpacity>
             </View>
           </View>

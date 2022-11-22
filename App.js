@@ -20,10 +20,7 @@ const DrawerTut = () => {
     >
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="Register" component={Register} />
-      <Drawer.Screen
-        name="Map"
-        component={Map}
-      />
+      <Drawer.Screen name="Map" component={Map} />
     </Drawer.Navigator>
   );
 };
@@ -31,7 +28,7 @@ const DrawerTut = () => {
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Map">
+      <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="Register" component={Register} />
