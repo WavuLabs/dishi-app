@@ -108,7 +108,6 @@ const Map = () => {
                 //   `Started routing between "${params.origin}" and "${params.destination}"`
                 // );
                 handleTraceRoute();
-
               }}
               onReady={(result) => {
                 setDistanceRem(`Distance: ${result.distance.toFixed(3)} km`);
