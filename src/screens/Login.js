@@ -14,6 +14,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -24,13 +26,14 @@ const Login = ({ navigation }) => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        navigation.navigate("Drawer");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
         Alert.alert("Error", errorMessage);
-      })
+      });
   };
 
   return (
@@ -40,16 +43,21 @@ const Login = ({ navigation }) => {
           style={styles.input}
           placeholder="Email"
           value={email}
-          onChange={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           value={password}
-          onChange={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
       </View>
+      <Icon.Button name="whatsapp" backgroundColor="#3b5998">
+        <Text style={{  fontSize: 15 }}>
+          Login with Facebook
+        </Text>
+      </Icon.Button>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.buttons, styles.loginButton]}
@@ -92,7 +100,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    
   },
   buttonContainer: {
     width: "80%",

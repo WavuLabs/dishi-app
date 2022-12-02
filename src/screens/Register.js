@@ -34,30 +34,30 @@ const Register = ({ navigation }) => {
         <Text>Register Screen</Text>
         <TextInput
           placeholder="First Name"
-          onChange={(text) => setFirstName(text)}
+          onChangeText={(text) => setFirstName(text)}
           style={styles.input}
         />
         <TextInput
           placeholder="Last Name"
-          onChange={(text) => setSecondName(text)}
+          onChangeText={(text) => setSecondName(text)}
           style={styles.input}
         />
 
         <TextInput
           placeholder="Email"
           style={styles.input}
-          onChange={(text) => setEmail(text)}
+          onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           placeholder="Password"
-          onChange={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           style={styles.input}
           secureTextEntry
         />
         <TextInput
           placeholder="Confirm Password"
           style={styles.input}
-          onChange={(text) => setConfirmPassword(text)}
+          onChangeText={(text) => setConfirmPassword(text)}
           secureTextEntry
         />
         <TouchableOpacity
