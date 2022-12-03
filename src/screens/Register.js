@@ -20,12 +20,28 @@ const Register = ({ navigation }) => {
   const [ConfirmPassword, setConfirmPassword] = React.useState("");
 
   const handleRegister = async () => {
-    const CreateUser = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    console.log(CreateUser.user);
+    if (password !== ConfirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    } else {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password,
+          FirstName,
+          SecondName
+        );
+        const user = userCredential.user;
+        console.log(user);
+        navigation.navigate("Login");
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        Alert.alert("Error", errorMessage);
+      }
+    }
   };
 
   return (

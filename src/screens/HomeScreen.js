@@ -8,16 +8,17 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import * as React from 'react';
+import * as React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from "react-native-gesture-handler";
 import SearchResults from "../components/SearchResults";
 import { Slider } from "@miblanchard/react-native-slider";
+import auth from "../../firebase.js";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
   const [budget, setBudget] = React.useState(0.2);
   const [budget2, setBudget2] = React.useState(1000);
-  let name = "John";
+
   const handleSearchReults = () => {
     navigation.navigate("Map");
   };
@@ -28,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }}>
       <View>
-        <Text>Hi {name}</Text>
+         <Text>Email: {auth.currentUser?.email}</Text>
         <Text>Welcome Back</Text>
       </View>
 

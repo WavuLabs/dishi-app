@@ -13,14 +13,30 @@ import auth from "../../firebase.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-
 const Login = ({ navigation }) => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("wavu@gmail.com");
+  const [password, setPassword] = React.useState("Wavu1738!");
 
+  React.useEffect(() => {
+    (async () => {
+      const user = auth.currentUser;
+      if (user) {
+        console.log("User is signed in", user);
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        // ...
+        navigation.navigate("Drawer");
+      } else {
+        // No user is signed in.
+        console.log("No user is signed in");
+      }
+    })();
+  }, []); 
+ 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -42,7 +58,7 @@ const Login = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          value={email}
+          value={"wavu@gmail.com"}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
@@ -53,11 +69,6 @@ const Login = ({ navigation }) => {
           secureTextEntry
         />
       </View>
-      <Icon.Button name="whatsapp" backgroundColor="#3b5998">
-        <Text style={{  fontSize: 15 }}>
-          Login with Facebook
-        </Text>
-      </Icon.Button>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[styles.buttons, styles.loginButton]}
@@ -78,12 +89,6 @@ const Login = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-
-      <Button
-        title="SKIP TO HOMESCREEN"
-        onPress={() => navigation.navigate("Drawer")}
-        style={{ paddingTop: 10, backgroundColor: "red" }}
-      />
     </KeyboardAvoidingView>
   );
 };

@@ -13,6 +13,8 @@ import Map from "./src/screens/Map";
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
+export const UserContext = React.createContext();
+
 const DrawerTut = () => {
   return (
     <Drawer.Navigator
