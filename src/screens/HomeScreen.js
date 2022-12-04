@@ -15,13 +15,16 @@ import SearchResults from "../components/SearchResults";
 import { Slider } from "@miblanchard/react-native-slider";
 import auth from "../../firebase.js";
 
-const HomeScreen = ({ route, navigation }) => {
-  const [budget, setBudget] = React.useState(0);
+const HomeScreen = ({ navigation }) => {
+
+  const [budget, setBudget] = React.useState(0)
+
   const handleSearchReults = () => {
     navigation.navigate("Map");
   };
+
   const handleSearch = () => {};
-  const imagesrc = require("./icon.png");
+  const imagesrc = require("../../assets/icon.png");
 
   return (
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -40,7 +43,7 @@ const HomeScreen = ({ route, navigation }) => {
           step={50}
           minimumTrackTintColor="#000000"
           maximumTrackTintColor="#FFFFFF"
-        ></Slider>
+        />
         <Text>Value: {budget}</Text>
       </View>
 

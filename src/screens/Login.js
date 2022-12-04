@@ -11,52 +11,31 @@ import {
 import React from "react";
 import auth from "../../firebase.js";
 import {
-  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   getAuth,
+  signInWithRedirect,
 } from "firebase/auth";
-import Icon from "react-native-vector-icons/FontAwesome";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("wavu@gmail.com");
   const [password, setPassword] = React.useState("Wavu1738!");
 
   React.useEffect(() => {
-    (async () => {
+    (() => {
       const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          // const uid = user.uid;
-          // Alert.alert(
-          //   "Already Signed In",
-          //   " User is signed in \n Proceed to Home",
-          //   [
-          //     {
-          //       text: "Cancel",
-          //       onPress: () => console.log("Cancel Pressed"),
-          //       style: "cancel",
-          //     },
-          //     {
-          //       text: "OK",
-          //       onPress: () => navigation.navigate("Drawer"),
-          //       style: "default",
-          //     },
-          //     {
-          //       text: "Sign Out",
-          //       onPress: () => auth.signOut(),
-          //       style: "destructive",
-          //     }
-          //   ]
-          // );
-          // ...
-        } else {
-          console.log("User is signed out");
-          // ...
-        }
-      });
+      const provider = new GoogleAuthProvider();
+      // onAuthStateChanged(auth, (user) => {
+      //   if (user) {
+      //     console.log("User is signed in");
+      //     navigation.navigate("Drawer");
+      //   } else {
+      //     console.log("User is signed out");
+      //     // ...
+      //   }
+      // });
+      signInWithRedirect(auth, provider);
     })();
   }, []);
 

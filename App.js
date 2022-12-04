@@ -16,10 +16,11 @@ const Drawer = createDrawerNavigator();
 
 export const UserContext = React.createContext();
 
-const DrawerTut = () => {
+const DrawerContainer = () => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      initialRouteName="HomeScreen"
     >
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="Register" component={Register} />
@@ -34,13 +35,14 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen
           name="Drawer"
-          component={DrawerTut}
-          options={{ headerShown: false }}
+          component={DrawerContainer}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -3,22 +3,22 @@ import {
   StyleSheet,
   Image,
   Text,
-  Button,
   View,
 } from "react-native";
 import React from "react";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import auth from "../../firebase.js";
-// import { getAuth ,updateProfile } from "firebase/auth";
-//  const auth = getAuth();
 
 const CustomDrawerContent = ({ navigation }, props) => {
+
   const handleSignOut = () => {
     auth.signOut().then(() => {
       navigation.navigate("Login");
     });
   };
+
   return (
+    
     <DrawerContentScrollView {...props} style={styles.CustomDrawerContent}>
       <View className=" justify-center items-center p-3">
         <Image

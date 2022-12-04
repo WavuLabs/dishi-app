@@ -4,7 +4,6 @@
 // https://firebase.google.com/docs/web/setup#available-libraries
 // import firebase from "firebase/app"; //copilot
 import { initializeApp } from "firebase/app";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore"; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
