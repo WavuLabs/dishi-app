@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  getAuth,
 } from "firebase/auth";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -23,20 +24,42 @@ const Login = ({ navigation }) => {
 
   React.useEffect(() => {
     (async () => {
-      const user = auth.currentUser;
-      if (user) {
-        console.log("User is signed in", user);
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        // ...
-        navigation.navigate("Drawer");
-      } else {
-        // No user is signed in.
-        console.log("No user is signed in");
-      }
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          // const uid = user.uid;
+          // Alert.alert(
+          //   "Already Signed In",
+          //   " User is signed in \n Proceed to Home",
+          //   [
+          //     {
+          //       text: "Cancel",
+          //       onPress: () => console.log("Cancel Pressed"),
+          //       style: "cancel",
+          //     },
+          //     {
+          //       text: "OK",
+          //       onPress: () => navigation.navigate("Drawer"),
+          //       style: "default",
+          //     },
+          //     {
+          //       text: "Sign Out",
+          //       onPress: () => auth.signOut(),
+          //       style: "destructive",
+          //     }
+          //   ]
+          // );
+          // ...
+        } else {
+          console.log("User is signed out");
+          // ...
+        }
+      });
     })();
-  }, []); 
- 
+  }, []);
+
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -53,43 +76,45 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="height">
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={"wavu@gmail.com"}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.buttons, styles.loginButton]}
-          onPress={handleLogin}
-          // onPress={() => navigation.navigate("HomePage")}
-        >
-          <Text className="text-center" style={""}>
-            LogIn
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="flex flex-col justify-center bg-yellow-500 w-strerch"
-          style={{ height: 40, width: "60%" }}
-          onPress={() => navigation.navigate("Register")}
-        >
-          <Text className="text-center" style={""}>
-            Register
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+    <>
+      <KeyboardAvoidingView style={styles.container} behavior="height">
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.buttons, styles.loginButton]}
+            onPress={handleLogin}
+            // onPress={() => navigation.navigate("HomePage")}
+          >
+            <Text className="text-center" style={""}>
+              LogIn
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex flex-col justify-center bg-yellow-500 w-strerch"
+            style={{ height: 40, width: "60%" }}
+            onPress={() => navigation.navigate("Register")}
+          >
+            <Text className="text-center" style={""}>
+              Register
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

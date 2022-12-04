@@ -16,20 +16,17 @@ import { Slider } from "@miblanchard/react-native-slider";
 import auth from "../../firebase.js";
 
 const HomeScreen = ({ route, navigation }) => {
-  const [budget, setBudget] = React.useState(0.2);
-  const [budget2, setBudget2] = React.useState(1000);
-
+  const [budget, setBudget] = React.useState(0);
   const handleSearchReults = () => {
     navigation.navigate("Map");
   };
-  const handleSearch = () => {
-    // navigation.navigate("Search", { name });
-  };
+  const handleSearch = () => {};
   const imagesrc = require("./icon.png");
+
   return (
     <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }}>
       <View>
-         <Text>Email: {auth.currentUser?.email}</Text>
+        <Text>Email: {auth.currentUser?.email}</Text>
         <Text>Welcome Back</Text>
       </View>
 

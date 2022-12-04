@@ -9,17 +9,20 @@ import {
 import React from "react";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import auth from "../../firebase.js";
+// import { getAuth ,updateProfile } from "firebase/auth";
+//  const auth = getAuth();
+
 const CustomDrawerContent = ({ navigation }, props) => {
   const handleSignOut = () => {
     auth.signOut().then(() => {
-    navigation.navigate("Login");
+      navigation.navigate("Login");
     });
   };
   return (
     <DrawerContentScrollView {...props} style={styles.CustomDrawerContent}>
       <View className=" justify-center items-center p-3">
         <Image
-          source={require("../../assets/favicon.png")}
+          source={{ uri: auth.currentUser?.photoURL }}
           style={styles.Image}
         />
         <Text className="p-3">Welcome to the app!</Text>
@@ -27,21 +30,21 @@ const CustomDrawerContent = ({ navigation }, props) => {
 
       <TouchableOpacity
         className="flex flex-col p-3 justify-center w-strerch"
-        onPress={() => navigation.navigate("HomePage")}
+        onPress={() => navigation.navigate("HomeScreen")}
       >
         <Text>Home</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         className="flex flex-col p-3 justify-center w-strerch"
-        onPress={() => navigation.navigate("HomePage")}
+        onPress={() => navigation.navigate("HomeScreen")}
       >
         <Text>Fitness Tracker</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         className="flex flex-col p-3 justify-center w-strerch bottom-0"
-        onPress={() => navigation.navigate("HomePage")}
+        onPress={() => navigation.navigate("Profile")}
       >
         <Text>Profile</Text>
       </TouchableOpacity>

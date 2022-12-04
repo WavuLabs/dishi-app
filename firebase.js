@@ -5,6 +5,10 @@
 // import firebase from "firebase/app"; //copilot
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore"; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // Your web app's Firebase configuration
 
@@ -15,8 +19,23 @@ const firebaseConfig = {
   storageBucket: "dishi-42a24.appspot.com",
   messagingSenderId: "877721823360",
   appId: "1:877721823360:web:8e558f8bf666dc3d171e65",
-};
+}; 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+
+// Initialize firestore
+const db = getFirestore(app);
+console.log("db", db);
+// initialize auth
+
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+
+// const auth = getAuth(app);
 // connectAuthEmulator(auth, "http://localhost:9099");
 export default auth;
+
+
+
+
+

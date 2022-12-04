@@ -9,6 +9,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
 import Map from "./src/screens/Map";
+import Profile from "./src/screens/Profile";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -23,6 +24,7 @@ const DrawerTut = () => {
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="Register" component={Register} />
       <Drawer.Screen name="Map" component={Map} />
+      <Drawer.Screen name="Profile" component={Profile} />
     </Drawer.Navigator>
   );
 };
