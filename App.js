@@ -3,6 +3,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Provider } from "react-native-paper";
 
 import CustomDrawerContent from "./src/components/CustomDrawerContent";
 import HomeScreen from "./src/screens/HomeScreen";
@@ -29,11 +30,10 @@ const DrawerContainer = () => {
     </Drawer.Navigator>
   );
 };
-
-function App() {
+const StackContainer = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Map" component={Map} />
@@ -46,6 +46,14 @@ function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  );
+};
+
+function App() {
+  return (
+    <Provider>
+      <StackContainer />
+    </Provider>
   );
 }
 

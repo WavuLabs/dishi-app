@@ -11,21 +11,23 @@ import {
 import React from "react";
 import auth from "../../firebase.js";
 import {
-  GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
+  signInWithPopup,
   getAuth,
   signInWithRedirect,
 } from "firebase/auth";
+import { Drawer, Provider as PaperProvider } from "react-native-paper";
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = React.useState("wavu@gmail.com");
-  const [password, setPassword] = React.useState("Wavu1738!");
+  const [email, setEmail] = React.useState("walterayiego@kabarak.ac.ke");
+  const [password, setPassword] = React.useState("walt12345");
 
   React.useEffect(() => {
-    (() => {
-      const auth = getAuth();
-      const provider = new GoogleAuthProvider();
+    (async () => {
+      // const auth = getAuth();
       // onAuthStateChanged(auth, (user) => {
       //   if (user) {
       //     console.log("User is signed in");
@@ -35,7 +37,6 @@ const Login = ({ navigation }) => {
       //     // ...
       //   }
       // });
-      signInWithRedirect(auth, provider);
     })();
   }, []);
 
@@ -53,9 +54,18 @@ const Login = ({ navigation }) => {
         Alert.alert("Error", errorMessage);
       });
   };
+  const handleResetPassword = () => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        console.log("Password reset email sent!", email);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
-    <>
+    <PaperProvider>
       <KeyboardAvoidingView style={styles.container} behavior="height">
         <View style={styles.inputContainer}>
           <TextInput
@@ -85,6 +95,15 @@ const Login = ({ navigation }) => {
           <TouchableOpacity
             className="flex flex-col justify-center bg-yellow-500 w-strerch"
             style={{ height: 40, width: "60%" }}
+            onPress={handleResetPassword}
+          >
+            <Text className="text-center" style={""}>
+              Forgot Password? Click to Reset
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex flex-col justify-center bg-yellow-500 w-strerch"
+            style={{ height: 40, width: "60%" }}
             onPress={() => navigation.navigate("Register")}
           >
             <Text className="text-center" style={""}>
@@ -93,7 +112,7 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </>
+    </PaperProvider>
   );
 };
 
