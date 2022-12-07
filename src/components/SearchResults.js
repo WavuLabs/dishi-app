@@ -35,15 +35,12 @@ const styles = StyleSheet.create({
   },
   hotelImage: {
     flex: 0.4,
-    borderWidth: 1,
     padding: 10,
-    // borderColor: "red",
   },
   restaurantsDetails: {
     flex: 0.6,
-    borderWidth: 1,
-    // borderColor: "red",
     width: "100%",
+    borderLeftWidth: 1,
     paddingLeft: 15,
     paddingTop: 5,
   },

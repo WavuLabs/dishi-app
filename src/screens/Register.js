@@ -1,16 +1,18 @@
 import {
   Alert,
+  Button,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
+import AlertBox from "../components/AlertBox.js";
 
 import auth from "../../firebase.js";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { Provider, TextInput } from "react-native-paper";
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
@@ -18,6 +20,7 @@ const Register = ({ navigation }) => {
   const [FirstName, setFirstName] = React.useState("");
   const [SecondName, setSecondName] = React.useState("");
   const [ConfirmPassword, setConfirmPassword] = React.useState("");
+  const [showAlertBox, setShowAlertBox] = React.useState(false);
 
   const handleRegister = async () => {
     if (password !== ConfirmPassword) {
@@ -25,16 +28,17 @@ const Register = ({ navigation }) => {
       return;
     } else {
       try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password,
-          FirstName,
-          SecondName
-        );
-        const user = userCredential.user;
-        console.log(user);
-        navigation.navigate("Login");
+        await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(auth.currentUser, {
+          displayName: FirstName + " " + SecondName,
+        })
+          .then(() => {
+            console.log("Profile updated!", auth.currentUser.displayName);
+            setShowAlertBox(true);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -45,45 +49,63 @@ const Register = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.container2} behavior="padding">
-        <Text>Register Screen</Text>
-        <TextInput
-          placeholder="First Name"
-          onChangeText={(text) => setFirstName(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Last Name"
-          onChangeText={(text) => setSecondName(text)}
-          style={styles.input}
-        />
+    <Provider>
+      <View style={styles.container}>
+        {showAlertBox && (
+          <AlertBox
+            AlertTitle="Succefully "
+            ParagraphText={
+              "User " + auth.currentUser.displayName + " succesfully created"
+            }
+            AlertDialogAction={
+              <TouchableOpacity
+                style={styles.buttonRegister}
+                onPress={() => navigation.navigate("Login")}
+              >
+                <Text className="text-center"> Go to Login</Text>
+              </TouchableOpacity>
+            }
+          />
+        )}
+        <KeyboardAvoidingView style={styles.container2} behavior="padding">
+          <Text>Register Screen</Text>
+          <TextInput
+            placeholder="First Name"
+            onChangeText={(text) => setFirstName(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Last Name"
+            onChangeText={(text) => setSecondName(text)}
+            style={styles.input}
+          />
 
-        <TextInput
-          placeholder="Email"
-          style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-        <TextInput
-          placeholder="Confirm Password"
-          style={styles.input}
-          onChangeText={(text) => setConfirmPassword(text)}
-          secureTextEntry
-        />
-        <TouchableOpacity
-          style={styles.buttonRegister}
-          onPress={handleRegister}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </View>
+          <TextInput
+            placeholder="Email"
+            style={styles.input}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
+          <TextInput
+            placeholder="Confirm Password"
+            style={styles.input}
+            onChangeText={(text) => setConfirmPassword(text)}
+            secureTextEntry
+          />
+          <TouchableOpacity
+            style={styles.buttonRegister}
+            onPress={handleRegister}
+          >
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </View>
+    </Provider>
   );
 };
 

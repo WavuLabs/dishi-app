@@ -20,18 +20,17 @@ const firebaseConfig = {
   appId: "1:877721823360:web:8e558f8bf666dc3d171e65",
 }; 
 const app = initializeApp(firebaseConfig);
-
 // Initialize firestore
 const db = getFirestore(app);
-console.log("db", db);
+
 // initialize auth
 
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// const auth = getAuth(app);
-// connectAuthEmulator(auth, "http://localhost:9099");
+
+
 export default auth;
 
 

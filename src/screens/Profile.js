@@ -7,35 +7,33 @@ import {
   updatePassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { Menu, Divider, Provider } from "react-native-paper";
+import { Menu, Divider, Provider, TextInput } from "react-native-paper";
+import color from "../components/colors.js";
+import AlertBox from "../components/AlertBox.js";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Profile() {
   const [visible, setVisible] = React.useState(false);
-
+  const [password, setPassword] = React.useState(null);
+  const [ConfirmPassword, setConfirmPassword] = React.useState(null);
+  const [secure, setSecure] = React.useState(true);
+  const [incorrectPassword, setIncorrectPassword] = React.useState(false);
+  const [hidden, setHidden] = React.useState(true);
+  const [showUpdate, setshowUpdate] = React.useState(false);
+  const [showResetPassword, setShowResetPassword] = React.useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const [firstName, setFirstName] = React.useState(null);
+  const [secondName, setSecondName] = React.useState(null);
 
   const handleUpdateProfile = () => {
     updateProfile(user, {
-      displayName: "Jane Q. User",
+      displayName: firstName + " " + secondName,
       photoURL: "https://picsum.photos/200",
     })
       .then(() => {
-        console.log("Profile updated!");
-        console.log(user?.photoURL);
-      })
-      .catch((error) => {
-        // An error occurred
-        // ...
-      });
-  };
-  const getVerificationEmail = () => {
-    sendEmailVerification(user)
-      .then(() => {
-        console.log("Verification email sent!");
+        console.log("Profile updated!", user.displayName);
       })
       .catch((error) => {
         console.log(error);
@@ -43,18 +41,24 @@ export default function Profile() {
   };
 
   const handleUpdatePassword = () => {
-    updatePassword(user, "newPassword")
-      .then(() => {
-        console.log("Password updated!");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (password === ConfirmPassword) {
+      updatePassword(user, password)
+        .then(() => {
+          console.log("Password updated!");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("Passwords do not match");
+      setIncorrectPassword(true);
+    }
   };
   const handleResetPassword = () => {
     sendPasswordResetEmail(auth, user?.email)
       .then(() => {
         console.log("Password reset email sent!", user?.email);
+        setShowResetPassword(true);
       })
       .catch((error) => {
         console.log(error);
@@ -63,25 +67,117 @@ export default function Profile() {
   return (
     <Provider>
       <View>
-        <Text>Profile</Text>
-        <Button title="Update Profile" onPress={handleUpdateProfile} />
         <Button
-          title=" Get Verification Email"
-          onPress={getVerificationEmail}
+          title="Update Profile"
+          onPress={() => {
+            setshowUpdate(!showUpdate);
+          }}
         />
-        <Button title="Update Password" onPress={handleUpdatePassword} />
-        <Button title="Reset Password" onPress={handleResetPassword} />
 
-        <Menu
-          visible={visible}
-          onDismiss={closeMenu}
-          anchor={<Button title="Show menu" onPress={openMenu} />}
+        <View
+          className={`flex ${showUpdate ? "hidden" : ""} flex-col w-full py-10`}
         >
-          <Menu.Item onPress={() => {}} title="Item 1" />
-          <Menu.Item onPress={() => {}} title="Item 2" />
-          <Divider />
-          <Menu.Item onPress={() => {}} title="Item 3" />
-        </Menu>
+          <TextInput
+            mode="outlined"
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+            label="First Name"
+            value={firstName}
+            onChangeText={(text) => setFirstName(text)}
+            style={styles.input}
+          />
+          <TextInput
+            mode="outlined"
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+            label="Last Name"
+            value={secondName}
+            onChangeText={(text) => setSecondName(text)}
+            style={styles.input}
+          />
+          <TouchableOpacity
+            onPress={handleUpdateProfile}
+            className="flex flex-col w-full p-1"
+            style={{ backgroundColor: color.primary, paddingHorizontal: 100 }}
+          >
+            <Text>Update Details</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            setHidden(!hidden);
+          }}
+          className="flex flex-col w-full p-3 my-2"
+          style={{ backgroundColor: color.secondary, paddingHorizontal: 100 }}
+        >
+          <Text>Reset Password</Text>
+        </TouchableOpacity>
+
+        <View className={`flex ${hidden ? "hidden" : ""} flex-col w-full p-1`}>
+          <TextInput
+            label="Password"
+            mode="outlined"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+            right={
+              secure ? (
+                <TextInput.Icon icon="eye" onPress={() => setSecure(!secure)} />
+              ) : (
+                <TextInput.Icon
+                  icon="eye-off"
+                  onPress={() => setSecure(!secure)}
+                />
+              )
+            }
+            secureTextEntry={secure}
+          />
+          <TextInput
+            label="Confirm Password"
+            mode="outlined"
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+            onChangeText={(text) => setConfirmPassword(text)}
+            right={
+              secure ? (
+                <TextInput.Icon icon="eye" onPress={() => setSecure(!secure)} />
+              ) : (
+                <TextInput.Icon
+                  icon="eye-off"
+                  onPress={() => setSecure(!secure)}
+                />
+              )
+            }
+            secureTextEntry={secure}
+          />
+
+          <TouchableOpacity
+            onPress={handleUpdatePassword}
+            className="flex flex-col w-full p-3 my-2"
+            style={{ backgroundColor: color.primary, paddingHorizontal: 100 }}
+          >
+            <Text>Confirm Password Update</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Button
+          title="Reset Password with Email"
+          onPress={handleResetPassword}
+        />
+        {showResetPassword ? (
+          <AlertBox
+            AlertTitle="Succefully"
+            ParagraphText={"Password reset email sent to " + user?.email}
+          />
+        ) : (
+          <></>
+        )}
+        {incorrectPassword ? (
+          <AlertBox
+            AlertTitle="Success"
+            ParagraphText=" Password updated successfully"
+          />
+        ) : (
+          <></>
+        )}
       </View>
     </Provider>
   );

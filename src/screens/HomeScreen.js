@@ -1,15 +1,12 @@
 import {
   StyleSheet,
   ScrollView,
-  Button,
   Text,
   View,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from "react-native";
 import * as React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput } from "react-native-gesture-handler";
 import SearchResults from "../components/SearchResults";
 import { Slider } from "@miblanchard/react-native-slider";
@@ -27,14 +24,14 @@ const HomeScreen = ({ navigation }) => {
   const imagesrc = require("../../assets/icon.png");
 
   return (
-    <SafeAreaView style={{ flex: 1, paddingHorizontal: 10 }}>
+    <View style={styles.parentContainer}>
       <View>
-        <Text>Email: {auth.currentUser?.email}</Text>
-        <Text>Welcome Back</Text>
+        <Text className="text-lg" >Welcome Back</Text>
+        <Text>{auth.currentUser?.displayName}</Text>
       </View>
 
       <View style={styles.budgetSlider}>
-        <Text style={styles.budgetText}>Sort by budget</Text>
+        <Text style={styles.budgetText} className="p-1">Sort by Price</Text>
         <Slider
           value={budget}
           onValueChange={(value) => setBudget(value)}
@@ -44,7 +41,7 @@ const HomeScreen = ({ navigation }) => {
           minimumTrackTintColor="#000000"
           maximumTrackTintColor="#FFFFFF"
         />
-        <Text>Value: {budget}</Text>
+        <Text>Price: {budget}</Text>
       </View>
 
       <View style={styles.searchingContainer}>
@@ -112,17 +109,24 @@ const HomeScreen = ({ navigation }) => {
           handleSearchReults={handleSearchReults}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  parentContainer: {
+    flex: 1,
+    marginHorizontal: 10,
+    paddingTop: 10,
+  },
   searchingContainer: {
     height: 40,
     flexDirection: "row",
-    marginVertical: 20,
+    marginVertical: 10,
+    color: "green",
+    backgroundColor: "white",
   },
   budgetSlider: {},
   textInput: {
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
   },
   budgetText: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "700",
     textAlign: "center",
   },
   addsContainer: {
@@ -155,12 +159,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   searchResultsContainer: {
-    flex: 1,
-    // flexWrap: "wrap",
     flexWrap: "nowrap",
-    flexDirection: "column",
-    borderWidth: 1,
-    borderColor: "grey",
     marginVertical: 20,
   },
 });

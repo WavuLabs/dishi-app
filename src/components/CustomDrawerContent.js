@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
+import { Avatar } from 'react-native-paper';
 import auth from "../../firebase.js";
 
 const CustomDrawerContent = ({ navigation }, props) => {
@@ -20,12 +21,13 @@ const CustomDrawerContent = ({ navigation }, props) => {
   return (
     
     <DrawerContentScrollView {...props} style={styles.CustomDrawerContent}>
-      <View className=" justify-center items-center p-3">
-        <Image
+      <View className=" justify-center items-center">
+        {/* <Image
           source={{ uri: auth.currentUser?.photoURL }}
           style={styles.Image}
-        />
-        <Text className="p-3">Welcome to the app!</Text>
+        /> */}
+        <Avatar.Image size={100} source={{ uri: auth.currentUser?.photoURL }} />
+        <Text className="p-3">Hello {auth.currentUser?.displayName }!!</Text>
       </View>
 
       <TouchableOpacity
@@ -37,7 +39,7 @@ const CustomDrawerContent = ({ navigation }, props) => {
 
       <TouchableOpacity
         className="flex flex-col p-3 justify-center w-strerch"
-        onPress={() => navigation.navigate("HomeScreen")}
+        onPress={() => navigation.navigate("FitnessTracker")}
       >
         <Text>Fitness Tracker</Text>
       </TouchableOpacity>
@@ -62,12 +64,7 @@ export default CustomDrawerContent;
 
 const styles = StyleSheet.create({
   CustomDrawerContent: {
-    flex: 1,
-    flexDirection: "column",
-    width: "100%",
-    height: "100%",
-    borderWidth: 1,
-    // borderColor: "red",
+    // flex: 1,
   },
   DrawerItem: {
     backgroundColor: "red",
