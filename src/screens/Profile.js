@@ -102,62 +102,6 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          onPress={() => {
-            setHidden(!hidden);
-          }}
-          className="flex flex-col w-full p-3 my-2"
-          style={{ backgroundColor: color.secondary, paddingHorizontal: 100 }}
-        >
-          <Text>Reset Password</Text>
-        </TouchableOpacity>
-
-        <View className={`flex ${hidden ? "hidden" : ""} flex-col w-full p-1`}>
-          <TextInput
-            label="Password"
-            mode="outlined"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
-            right={
-              secure ? (
-                <TextInput.Icon icon="eye" onPress={() => setSecure(!secure)} />
-              ) : (
-                <TextInput.Icon
-                  icon="eye-off"
-                  onPress={() => setSecure(!secure)}
-                />
-              )
-            }
-            secureTextEntry={secure}
-          />
-          <TextInput
-            label="Confirm Password"
-            mode="outlined"
-            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
-            onChangeText={(text) => setConfirmPassword(text)}
-            right={
-              secure ? (
-                <TextInput.Icon icon="eye" onPress={() => setSecure(!secure)} />
-              ) : (
-                <TextInput.Icon
-                  icon="eye-off"
-                  onPress={() => setSecure(!secure)}
-                />
-              )
-            }
-            secureTextEntry={secure}
-          />
-
-          <TouchableOpacity
-            onPress={handleUpdatePassword}
-            className="flex flex-col w-full p-3 my-2"
-            style={{ backgroundColor: color.primary, paddingHorizontal: 100 }}
-          >
-            <Text>Confirm Password Update</Text>
-          </TouchableOpacity>
-        </View>
-
         <Button
           title="Reset Password with Email"
           onPress={handleResetPassword}
