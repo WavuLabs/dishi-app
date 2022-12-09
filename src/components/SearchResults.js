@@ -1,5 +1,6 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import React from "react";
+import color from "./colors";
 // import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SearchResults = ({ imagesrc, handleSearchReults }) => {
@@ -27,8 +28,8 @@ export default SearchResults;
 const styles = StyleSheet.create({
   hotelDetailsContainer: {
     flexDirection: "row",
-    borderWidth: 1,
-    borderColor: "grey",
+    borderWidth: 0.3,
+    borderColor: color.primary,
     marginHorizontal: 10,
     marginVertical: 5,
     height: 100,
@@ -40,7 +41,8 @@ const styles = StyleSheet.create({
   restaurantsDetails: {
     flex: 0.6,
     width: "100%",
-    borderLeftWidth: 1,
+    borderLeftWidth: 0.2,
+    borderColor: color.primary,
     paddingLeft: 15,
     paddingTop: 5,
   },

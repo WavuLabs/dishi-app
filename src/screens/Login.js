@@ -2,48 +2,53 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Alert,
   Text,
   View,
-  Button,
+  Image,
 } from "react-native";
 import React from "react";
 import auth from "../../firebase.js";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithPopup,
   getAuth,
-  signInWithRedirect,
 } from "firebase/auth";
 import {
-  Drawer,
-  Provider as PaperProvider,
   TextInput,
+  Button,
+  Paragraph,
+  Dialog,
+  Portal,
+  Provider,
 } from "react-native-paper";
 
 import color from "../components/colors.js";
-import { Icon } from "react-native-elements";
+import {} from "react-native-paper";
+import { Alert } from "react-native";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("walterayiego@gmail.com");
   const [password, setPassword] = React.useState("walt1234");
   const [secure, setSecure] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
+  const [forgotPasswordText, setforgotPasswordText] = React.useState(false);
+
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
 
   React.useEffect(() => {
-    (async () => {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          navigation.navigate("Drawer");
-        } else {
-          // ...
-        }
-      });
-    });
+    detectAuthChange();
   }, []);
+
+  const detectAuthChange = () => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigation.navigate("Drawer");
+      } 
+    });
+  };
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -54,24 +59,17 @@ const Login = ({ navigation }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        Alert.alert("Login Failed", "Wrong Password or invalid email");
         console.log(errorCode, errorMessage);
-        Alert.alert("Login Failed", "Invalid email or password", [
-          {
-            text: "Reset Password",
-            onPress: () => handleResetPassword(),
-            style: "cancel",
-          },
-          { text: "OK", onPress: () => console.log("OK Pressed") },
-        ]);
+        // setVisible(true);
+        setforgotPasswordText(true);
       });
   };
+
   const handleResetPassword = () => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        Alert.alert(
-          "Password Reset",
-          "Password reset email sent to \n" + email
-        );
+        console.log("Password reset email sent!", email);
       })
       .catch((error) => {
         console.log(error);
@@ -79,64 +77,112 @@ const Login = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
-        <View className="flex flex-col w-full p-1 ">
-          <TextInput
-            label="Email"
-            mode="outlined"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
-            right={<TextInput.Icon icon="email" />}
-          />
-        </View>
-        <View className="flex flex-col w-full p-1">
-          <TextInput
-            label="Password"
-            mode="outlined"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
-            right={
-              secure ? (
-                <TextInput.Icon icon="eye" onPress={() => setSecure(!secure)} />
-              ) : (
-                <TextInput.Icon
-                  icon="eye-off"
-                  onPress={() => setSecure(!secure)}
-                />
-              )
-            }
-            secureTextEntry={secure}
-          />
-        </View>
-      </KeyboardAvoidingView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.buttons, styles.loginButton]}
-          onPress={handleLogin}
-        >
-          <Text className="text-center" style={""}>
-            LogIn
-          </Text>
-        </TouchableOpacity>
- 
-        <TouchableOpacity
-          className="flex flex-col justify-center"
-          style={{ height: 40, width: "60%" }}
-          onPress={() => navigation.navigate("Register")}
-        >
-          <Text className="text-center">
-            Dont have an account?
-            <Text className="text-center text-base text-[#ffaa00]">
-              {" "}
-              Register
+    <Provider>
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/dishiLogo.png")}
+          className="mt-20 w-full h-1/3"
+        />
+        <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
+          <View className="flex flex-col w-full p-1 ">
+            <TextInput
+              label="Email"
+              mode="outlined"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+              right={<TextInput.Icon icon="email" />}
+            />
+          </View>
+          <View className="flex flex-col w-full p-1">
+            <TextInput
+              label="Password"
+              mode="outlined"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+              right={
+                secure ? (
+                  <TextInput.Icon
+                    icon="eye"
+                    onPress={() => setSecure(!secure)}
+                  />
+                ) : (
+                  <TextInput.Icon
+                    icon="eye-off"
+                    onPress={() => setSecure(!secure)}
+                  />
+                )
+              }
+              secureTextEntry={secure}
+            />
+          </View>
+        </KeyboardAvoidingView>
+        <View style={styles.buttonContainer}>
+          {forgotPasswordText && (
+            <TouchableOpacity
+              className="flex flex-col justify-center"
+              style={{ height: 40, width: "60%" }}
+              onPress={() => showDialog()}
+            >
+              <Text className="text-center">
+                Forgot Password?
+                <Text
+                  className={`text-center text-base text-[${color.primary}]`}
+                >
+                  {" "}
+                  Reset
+                </Text>
+              </Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            style={[styles.buttons, styles.loginButton]}
+            onPress={handleLogin}
+          >
+            <Text className="text-center" style={""}>
+              LogIn
             </Text>
-          </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="flex flex-col justify-center"
+            style={{ height: 40, width: "60%" }}
+            onPress={() => navigation.navigate("Register")}
+          >
+            <Text className="text-center">
+              Dont have an account?
+              <Text className={`text-center text-base text-[${color.primary}]`}>
+                {" "}
+                Register
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog.Title>Reset Password</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>Enter your email to reset your password</Paragraph>
+            {
+              <TextInput
+                label="Email"
+                mode="outlined"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
+                right={<TextInput.Icon icon="email" />}
+              />
+            }
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={handleResetPassword}>Reset Password</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </Provider>
   );
 };
 
@@ -147,14 +193,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   inputContainer: {
     flexDirection: "column",
     width: "85%",
     alignItems: "center",
     justifyContent: "center",
-    margin: 10,
+    margin: 1,
   },
   buttonContainer: {
     width: "80%",

@@ -3,7 +3,8 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import color  from "./src/components/colors";
+import color from "./src/components/colors";
+import { StatusBar } from "expo-status-bar";
 
 import CustomDrawerContent from "./src/components/CustomDrawerContent";
 import HomeScreen from "./src/screens/HomeScreen";
@@ -23,20 +24,19 @@ const DrawerContainer = () => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="HomeScreen"
+      screenOptions={
+        {
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: color.secondary,
+          },
+        }
+      }
     >
       <Drawer.Screen
         name="HomeScreen"
         component={HomeScreen}
-        options={{
-          title: "Dishi",
-          headerStyle: {
-            backgroundColor: color.primary,
-          },
-          headerTintColor: color.background,
-          headerTitleStyle: {
-            fontWeight: "700",
-          },
-        }}
+        options={{ title: "Dishi" }}
       />
       <Drawer.Screen name="Register" component={Register} />
       <Drawer.Screen name="Map" component={Map} />
@@ -72,7 +72,10 @@ const StackContainer = () => {
 
 function App() {
   return (
+    <>
       <StackContainer />
+      <StatusBar style="light" hidden={false} />
+    </>
   );
 }
 

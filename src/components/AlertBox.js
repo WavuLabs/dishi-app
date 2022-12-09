@@ -8,14 +8,12 @@ const AlertBox = ({
   AlertDialogContent,
   AlertDialogAction,
 }) => {
-    
-  const [visible, setVisible] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
   return (
     <View>
-    
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Title>{AlertTitle}</Dialog.Title>
@@ -25,7 +23,7 @@ const AlertBox = ({
           </Dialog.Content>
           <Dialog.Actions>
             {AlertDialogAction}
-            <Button onPress={hideDialog}>Done</Button>
+            <Button onPress={hideDialog}>Cancel</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

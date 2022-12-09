@@ -1,24 +1,13 @@
 import { StyleSheet, Button, Text, View } from "react-native";
 import React from "react";
-import {
-  getAuth,
-  updateProfile,
-  sendEmailVerification,
-  updatePassword,
-  sendPasswordResetEmail,
-} from "firebase/auth";
-import { Menu, Divider, Provider, TextInput } from "react-native-paper";
+import { getAuth, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { Provider, TextInput } from "react-native-paper";
 import color from "../components/colors.js";
 import AlertBox from "../components/AlertBox.js";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Profile() {
-  const [visible, setVisible] = React.useState(false);
-  const [password, setPassword] = React.useState(null);
-  const [ConfirmPassword, setConfirmPassword] = React.useState(null);
-  const [secure, setSecure] = React.useState(true);
-  const [incorrectPassword, setIncorrectPassword] = React.useState(false);
-  const [hidden, setHidden] = React.useState(true);
   const [showUpdate, setshowUpdate] = React.useState(false);
   const [showResetPassword, setShowResetPassword] = React.useState(false);
   const auth = getAuth();
@@ -40,20 +29,6 @@ export default function Profile() {
       });
   };
 
-  const handleUpdatePassword = () => {
-    if (password === ConfirmPassword) {
-      updatePassword(user, password)
-        .then(() => {
-          console.log("Password updated!");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      console.log("Passwords do not match");
-      setIncorrectPassword(true);
-    }
-  };
   const handleResetPassword = () => {
     sendPasswordResetEmail(auth, user?.email)
       .then(() => {
@@ -64,6 +39,7 @@ export default function Profile() {
         console.log(error);
       });
   };
+
   return (
     <Provider>
       <View>
@@ -73,7 +49,17 @@ export default function Profile() {
             setshowUpdate(!showUpdate);
           }}
         />
-
+        <View className="h-36">
+          <LinearGradient
+            // Background Linear Gradient
+            // colors={[color.primary,"transparent", color.secondary]}
+            colors={['#5851DB', '#C13584', '#E1306C', '#FD1D1D', '#F77737']}
+            style={styles.background}
+            className="h-36 backdrop-blur-sm"
+            start={{ x: 0, y: 0 }} 
+            end={{ x: 1, y: 1 }}
+          ><Text>HEllo</Text></LinearGradient>
+        </View>
         <View
           className={`flex ${showUpdate ? "hidden" : ""} flex-col w-full py-10`}
         >
@@ -110,14 +96,6 @@ export default function Profile() {
           <AlertBox
             AlertTitle="Succefully"
             ParagraphText={"Password reset email sent to " + user?.email}
-          />
-        ) : (
-          <></>
-        )}
-        {incorrectPassword ? (
-          <AlertBox
-            AlertTitle="Success"
-            ParagraphText=" Password updated successfully"
           />
         ) : (
           <></>
