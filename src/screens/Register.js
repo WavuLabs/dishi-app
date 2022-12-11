@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import color from "../components/colors.js";
 import React from "react";
 import AlertBox from "../components/AlertBox.js";
 
@@ -67,41 +68,54 @@ const Register = ({ navigation }) => {
             }
           />
         )}
-        <KeyboardAvoidingView style={styles.container2} behavior="padding">
-          <Text>Register Screen</Text>
+        <KeyboardAvoidingView
+          className="flex flex-col justify-center items-center w-full mx-3 "
+          behavior="padding"
+        >
           <TextInput
-            placeholder="First Name"
+            label="First Name"
+            mode="outlined"
             onChangeText={(text) => setFirstName(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
             style={styles.input}
           />
           <TextInput
-            placeholder="Last Name"
+            label="Last Name"
+            mode="outlined"
             onChangeText={(text) => setSecondName(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
             style={styles.input}
           />
 
           <TextInput
-            placeholder="Email"
+            label="Email"
+            mode="outlined"
             style={styles.input}
             onChangeText={(text) => setEmail(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
           />
           <TextInput
-            placeholder="Password"
+            label="Password"
+            mode="outlined"
             onChangeText={(text) => setPassword(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
             style={styles.input}
             secureTextEntry
           />
           <TextInput
-            placeholder="Confirm Password"
+            label="Confirm Password"
+            mode="outlined"
             style={styles.input}
             onChangeText={(text) => setConfirmPassword(text)}
+            outlineStyle={{ borderColor: color.primary, borderWidth: 1 }}
             secureTextEntry
           />
           <TouchableOpacity
             style={styles.buttonRegister}
+            className="flex flex-col w-1/2 justify-center items-center m-4 "
             onPress={handleRegister}
           >
-            <Text style={styles.buttonText}>Register</Text>
+            <Text className="text-center  m-2 ">Register</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </View>
@@ -119,27 +133,17 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
   },
-  container2: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    padding: 10,
-  },
+
   input: {
-    width: 300,
-    height: 40,
-    margin: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
+    // height: 30,
+    // marginVertical: 10,
+    // padding: 10,
+    width: "100%",
+    borderRadius: 10,
+    backgroundColor: "white",
   },
   buttonRegister: {
     backgroundColor: "#ffaa00",
-    borderColor: "#ffaa00",
-    color: "white",
-    padding: 10,
-    margin: 5,
     borderRadius: 5,
   },
 });

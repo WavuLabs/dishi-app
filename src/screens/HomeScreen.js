@@ -16,7 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import color from "../components/colors";
 
 const HomeScreen = ({ navigation }) => {
-  const [budget, setBudget] = React.useState(0);
+  const [budget, setBudget] = React.useState(3000);
   const [search, setSearch] = React.useState("");
 
   const handleSearchReults = () => {
@@ -30,49 +30,59 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.parentContainer}>
-      <View
-        className={``}
-        // style={{  backgroundColor: color.secondary }} bg-[${color.primary}]
-      >
+      <View style={{}}>
+        {/* WELCOME TEXT */}
         <LinearGradient
-          colors={[color.primary, "transparent", "transparent"]}
+          colors={[color.primary, color.third, "transparent"]}
           style={styles.background}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+          start={{ x: -0.1, y: 0 }}
+          end={{ x: 1.5, y: 0.7 }}
         >
-          <Text className={`text-lg`} style={{}}>
-            {" "}
-            Welcome to Dishi!!
-          </Text>
-          <Text className={`text-lg`}>Get anymeal with any budget</Text>
+          <View>
+            <Text className={`text-lg text-center`} style={{}}>
+              {" "}
+              Welcome to Dishi!!
+            </Text>
+            <Text className={`text-lg text-center`}>
+              Get anymeal with any budget
+            </Text>
+          </View>
         </LinearGradient>
-      </View>
+        {/* SEARCH BOX */}
 
-      <View className="px-3" style={styles.searchingContainer}>
-        <TextInput
-          placeholder="Search Food"
-          style={[styles.textInput]}
-          onChangeText={(text) => setSearch(text)}
-        ></TextInput>
-        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-          <Text style={{ color: "white", paddingTop: 2 }}>Search</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.searchingContainer}>
+          <TextInput
+          className="px-5" 
+            placeholder="Search Food"
+            style={[styles.textInput]}
+            onChangeText={(text) => setSearch(text)}
+          ></TextInput>
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Text style={{ color: color.third, paddingTop: 2 }}>Search</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View className="px-3" style={styles.budgetSlider}>
-        <Text style={styles.budgetText} className="p-1">
-          Sort by Price
-        </Text>
-        <Slider
-          value={budget}
-          onValueChange={(value) => setBudget(value)}
-          minimumValue={0}
-          maximumValue={3000}
-          step={50}
-          minimumTrackTintColor={color.error}
-          maximumTrackTintColor={color.disabled}
-        />
-        <Text>Price: {budget}</Text>
+        {/* SLIDER */}
+
+        <View className="mx-2" style={styles.budgetSlider}>
+          <Text
+            style={[styles.budgetText, { color: color.primary }]}
+            className="p-1"
+          >
+            Sort by Price
+          </Text>
+          <Slider
+            value={budget}
+            onValueChange={(value) => setBudget(value)}
+            minimumValue={0}
+            maximumValue={3000}
+            step={50}
+            minimumTrackTintColor={color.secondary}
+            maximumTrackTintColor={color.disabled}
+            thumbTintColor={color.primary}
+          />
+          <Text className="m-2">Maximum Price: {budget}</Text>
+        </View>
       </View>
       <ScrollView style={styles.searchResultsContainer}>
         <View style={styles.addsContainer}>
@@ -118,16 +128,12 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
-    // marginHorizontal: 10,
-    // paddingTop: 10,
     backgroundColor: color.third,
+    color: color.primary,
   },
   searchingContainer: {
     height: 40,
     flexDirection: "row",
-    marginVertical: 10,
-    // color: "green",
-    //
   },
   budgetSlider: {
     // padding: 10,
@@ -158,12 +164,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     width: "100%",
-    height: 150,
-    marginVertical: 10,
+    height: 160,
+    marginVertical: 0,
   },
   searchResultsContainer: {
     flexWrap: "nowrap",
-    marginVertical: 20,
-    paddingHorizontal: 10,
+    marginVertical: 0,
   },
 });

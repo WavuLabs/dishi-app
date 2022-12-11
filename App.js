@@ -24,14 +24,15 @@ const DrawerContainer = () => {
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="HomeScreen"
-      screenOptions={
-        {
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: color.secondary,
-          },
-        }
-      }
+      screenOptions={{
+        headerStyle: {
+          // backgroundColor: "#75420e",
+          backgroundColor: color.primary,
+        },
+        headerTitleStyle: {
+          color: color.third,
+        },
+      }}
     >
       <Drawer.Screen
         name="HomeScreen"
@@ -48,7 +49,17 @@ const DrawerContainer = () => {
 const StackContainer = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: color.primary,
+          },
+          headerTitleStyle: {
+            color: color.third,
+          },
+        }} 
+      >
         <Stack.Screen
           name="Login"
           component={Login}

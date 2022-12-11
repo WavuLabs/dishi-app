@@ -49,17 +49,7 @@ export default function Profile() {
             setshowUpdate(!showUpdate);
           }}
         />
-        <View className="h-36">
-          <LinearGradient
-            // Background Linear Gradient
-            // colors={[color.primary,"transparent", color.secondary]}
-            colors={['#5851DB', '#C13584', '#E1306C', '#FD1D1D', '#F77737']}
-            style={styles.background}
-            className="h-36 backdrop-blur-sm"
-            start={{ x: 0, y: 0 }} 
-            end={{ x: 1, y: 1 }}
-          ><Text>HEllo</Text></LinearGradient>
-        </View>
+    
         <View
           className={`flex ${showUpdate ? "hidden" : ""} flex-col w-full py-10`}
         >

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     borderColor: color.primary,
     marginHorizontal: 10,
     marginVertical: 5,
-    height: 100,
+    height: 120,
   },
   hotelImage: {
     flex: 0.4,
@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
     borderColor: color.primary,
     paddingLeft: 15,
     paddingTop: 5,
+    justifyContent: "space-evenly",
   },
 });

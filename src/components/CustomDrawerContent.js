@@ -15,7 +15,12 @@ const CustomDrawerContent = ({ navigation }, props) => {
   const handleSignOut = () => {
     auth.signOut().then(() => {
       navigation.navigate("Login");
-    });
+      console.log("Signed Out");
+    }).catch(
+      (error) => {
+        console.log(error);
+      }
+    )
   };
 
   return (

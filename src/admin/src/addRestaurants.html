@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="h-screen w-screen flex flex-col gap-7 justify-center items-center">
+        <div class="flex justify-center items-center">
+            <h1 class="text-2xl font-bold">Add Restaurants</h1>
+        </div>
+        <form id="addRestaurant" class="border flex flex-col h-3/4 w-1/2 justify-evenly items-center">
+            <div class="flex w-full justify-center px-6 items-center">
+                <input type="text" placeholder="Name" id="name" class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="Cuisine Type" id="cuisine_type"
+                    class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="City" id="neighborhood"
+                    class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="Address" id="address"
+                    class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="Phone" id="phone"
+                    class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="Website" id="website"
+                    class="border-2 border-gray-300 rounded-md p-2 w-full">
+            </div>
+            <div class="flex justify-center w-full px-6 items-center">
+                <input type="text" placeholder="Add Menu" id="website"
+                    class="border-2 border-gray-300 rounded-md p-2 w-1/2">
+                <input type="text" placeholder="Add Price" id="website"
+                    class="border-2 border-gray-300 rounded-md p-2 w-1/2">
+            </div>
+           
+            <div class="flex justify-center w-full px-6 items-center">
+                <button type="submit" class="bg-blue-500 text-white rounded-md p-2 w-full">Add Restaurant</button>
+            </div>
+        </form>
+
+    </div>
+    <script>
+
+        var newRestaurant = document.createElement('div');
+        newRestaurant.className = 'restaurant';
+        newRestaurant.innerHTML = '<h2>' + restaurant.name + '</h2>' +
+            '<p>' + restaurant.cuisine_type + '</p>' +
+            '<p>' + restaurant.neighborhood + '</p>' +
+            '<p>' + restaurant.address + '</p>' +
+            '<p>' + restaurant.phone + '</p>' +
+            '<p>' + restaurant.website + '</p>';
+        //append new restaurant to the page
+        document.getElementById('restaurants').appendChild(newRestaurant);
+
+        //add event listener to the form
+        document.getElementById('addRestaurant').addEventListener('submit', function (e) {
+            //prevent the default action of the form
+            e.preventDefault();
+            //get the values of the form
+            var name = document.getElementById('name').value;
+            var cuisine_type = document.getElementById('cuisine_type').value;
+            var neighborhood = document.getElementById('neighborhood').value;
+            var address = document.getElementById('address').value;
+            var phone = document.getElementById('phone').value;
+            var website = document.getElementById('website').value;
+            //create a new restaurant object
+            var newRestaurant = new Restaurant(name, cuisine_type, neighborhood, address, phone, website);
+            //add the new restaurant to the array
+            restaurants.push(newRestaurant);
+            //add the new restaurant to the page
+            addRestaurantToPage(newRestaurant);
+            //clear the form
+            document.getElementById('addRestaurant').reset();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -22,6 +22,8 @@ const Map = () => {
   const [DurationRem, setDurationRem] = useState(null);
   const [modeDirections, setModeDirections] = useState("DRIVING");
 
+  const [visible, setVisible] = useState(false);
+
   const origin = { latitude: -0.2761213, longitude: 36.054829 };
   const destination = { latitude: -0.2871213, longitude: 36.0854829 };
 
@@ -62,14 +64,17 @@ const Map = () => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      let locationCoords = await Location.getCurrentPositionAsync({});
 
       setCurrLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        latitude: locationCoords.coords.latitude,
+        longitude: locationCoords.coords.longitude,
       });
+      setLocation(locationCoords);
     })();
+    setInterval(() => {
+      setVisible(!visible);
+    }, 2000);
   }, []);
 
   let text = "Waiting..";
@@ -152,7 +157,7 @@ const Map = () => {
           </View>
         </>
       ) : (
-        <Text style={{ flex: 1 }}>{text}</Text>
+        <Text style={{ flex: 1 ,justifyContent:"center"}}>{text}</Text>
       )}
     </View>
   );

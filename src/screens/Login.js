@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Image,
+  Alert,
 } from "react-native";
 import React from "react";
 import auth from "../../firebase.js";
@@ -24,8 +25,6 @@ import {
 } from "react-native-paper";
 
 import color from "../components/colors.js";
-import {} from "react-native-paper";
-import { Alert } from "react-native";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("walterayiego@gmail.com");
@@ -46,7 +45,7 @@ const Login = ({ navigation }) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         navigation.navigate("Drawer");
-      } 
+      }
     });
   };
 
@@ -81,7 +80,7 @@ const Login = ({ navigation }) => {
       <View style={styles.container}>
         <Image
           source={require("../../assets/dishiLogo.png")}
-          className="mt-20 w-full h-1/3"
+          className="mt-10 w-full h-1/3"
         />
         <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
           <View className="flex flex-col w-full p-1 ">
@@ -129,8 +128,8 @@ const Login = ({ navigation }) => {
                 Forgot Password?
                 <Text
                   className={`text-center text-base text-[${color.primary}]`}
+                  style={{ color: color.primary }}
                 >
-                  {" "}
                   Reset
                 </Text>
               </Text>
@@ -152,8 +151,10 @@ const Login = ({ navigation }) => {
           >
             <Text className="text-center">
               Dont have an account?
-              <Text className={`text-center text-base text-[${color.primary}]`}>
-                {" "}
+              <Text
+                className={`text-center text-base text-[${color.primary}] `}
+                style={{ color: color.primary }}
+              >
                 Register
               </Text>
             </Text>
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
+    backgroundColor: color.third,
     // justifyContent: "center",
   },
   inputContainer: {
