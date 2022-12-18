@@ -146,17 +146,15 @@ const Login = ({ navigation }) => {
 
           <TouchableOpacity
             className="flex flex-col justify-center"
-            style={{ height: 40, width: "60%" }}
+            style={{ height: 50, width: "60%" }}
             onPress={() => navigation.navigate("Register")}
           >
-            <Text className="text-center">
-              Dont have an account?
-              <Text
-                className={`text-center text-base text-[${color.primary}] `}
-                style={{ color: color.primary }}
-              >
-                Register
-              </Text>
+            <Text className="text-center">Dont have an account?</Text>
+            <Text
+              className={`text-center text-base `}
+              style={{ color: color.primary }}
+            >
+              Register
             </Text>
           </TouchableOpacity>
         </View>

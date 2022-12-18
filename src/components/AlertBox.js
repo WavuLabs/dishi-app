@@ -8,7 +8,7 @@ const AlertBox = ({
   AlertDialogContent,
   AlertDialogAction,
 }) => {
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 

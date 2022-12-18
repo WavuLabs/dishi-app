@@ -1,30 +1,23 @@
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Text,
-  View,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, Image, Text, View } from "react-native";
 import React from "react";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
-import { Avatar } from 'react-native-paper';
+import { Avatar } from "react-native-paper";
 import auth from "../../firebase.js";
 
 const CustomDrawerContent = ({ navigation }, props) => {
-
   const handleSignOut = () => {
-    auth.signOut().then(() => {
-      navigation.navigate("Login");
-      console.log("Signed Out");
-    }).catch(
-      (error) => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login");
+        console.log("Signed Out");
+      })
+      .catch((error) => {
         console.log(error);
-      }
-    )
+      });
   };
 
   return (
-    
     <DrawerContentScrollView {...props} style={styles.CustomDrawerContent}>
       <View className=" justify-center items-center">
         {/* <Image
@@ -32,7 +25,7 @@ const CustomDrawerContent = ({ navigation }, props) => {
           style={styles.Image}
         /> */}
         <Avatar.Image size={100} source={{ uri: auth.currentUser?.photoURL }} />
-        <Text className="p-3">Hello {auth.currentUser?.displayName }!!</Text>
+        <Text className="p-3">Hello {auth.currentUser?.displayName}!!</Text>
       </View>
 
       <TouchableOpacity
@@ -61,6 +54,7 @@ const CustomDrawerContent = ({ navigation }, props) => {
       >
         <Text>Sign Out</Text>
       </TouchableOpacity>
+
     </DrawerContentScrollView>
   );
 };

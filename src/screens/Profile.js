@@ -1,11 +1,18 @@
-import { StyleSheet, Button, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Button,
+  Text,
+  View,
+  FlatList,
+  Platform,
+} from "react-native";
 import React from "react";
 import { getAuth, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { Provider, TextInput } from "react-native-paper";
 import color from "../components/colors.js";
 import AlertBox from "../components/AlertBox.js";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { LinearGradient } from "expo-linear-gradient";
+import { TouchableHighlight } from "react-native";
 
 export default function Profile() {
   const [showUpdate, setshowUpdate] = React.useState(false);
@@ -42,14 +49,14 @@ export default function Profile() {
 
   return (
     <Provider>
-      <View>
+      <View style={{ flex: 1 }}>
         <Button
           title="Update Profile"
           onPress={() => {
             setshowUpdate(!showUpdate);
           }}
         />
-    
+
         <View
           className={`flex ${showUpdate ? "hidden" : ""} flex-col w-full py-10`}
         >
@@ -90,6 +97,39 @@ export default function Profile() {
         ) : (
           <></>
         )}
+
+        <FlatList
+          className="flex flex-col w-full"
+          ItemSeparatorComponent={
+            Platform.OS !== "android" &&
+            (({ highlighted }) => (
+              <View
+                style={[style.separator, highlighted && { marginLeft: 0 }]}
+              />
+            ))
+          }
+          horizontal={true}
+          data={[
+            { title: "Title Text", key: "item1" },
+            { title: "Title Text", key: "item1" },
+            { title: "Title Text", key: "item1" },
+            { title: "Title Text", key: "item1" },
+            { title: "Title Text", key: "item1" },
+          ]}
+          renderItem={({ item, index, separators }) => (
+            <TouchableHighlight
+              key={item.key}
+
+              onPress={() => {}}
+              onShowUnderlay={separators.highlight}
+              onHideUnderlay={separators.unhighlight}
+            >
+              <View style={{ backgroundColor: "white" }}>
+                <Text>{item.title}</Text>
+              </View>
+            </TouchableHighlight>
+          )}
+        />
       </View>
     </Provider>
   );

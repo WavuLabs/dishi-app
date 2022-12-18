@@ -1,7 +1,6 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
 import React from "react";
 import color from "./colors";
-// import { TouchableOpacity } from "react-native-gesture-handler";
 
 const SearchResults = ({ imagesrc, handleSearchReults }) => {
   const handlePress = () => {};
@@ -28,22 +27,23 @@ export default SearchResults;
 const styles = StyleSheet.create({
   hotelDetailsContainer: {
     flexDirection: "row",
-    borderWidth: 0.3,
+    borderWidth: 0.4,
     borderColor: color.primary,
     marginHorizontal: 10,
     marginVertical: 5,
     height: 120,
+    borderRadius: 5,
   },
   hotelImage: {
     flex: 0.4,
+    borderRightWidth: 0.2,
+    borderColor: color.primary,
     padding: 10,
   },
   restaurantsDetails: {
     flex: 0.6,
     width: "100%",
-    borderLeftWidth: 0.2,
-    borderColor: color.primary,
-    paddingLeft: 15,
+    marginLeft: 15,
     paddingTop: 5,
     justifyContent: "space-evenly",
   },

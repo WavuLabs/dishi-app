@@ -4,122 +4,182 @@ import {
   Text,
   View,
   Image,
-  Button,
   TextInput,
   TouchableOpacity,
+  FlatList,
+  Alert,
 } from "react-native";
 import * as React from "react";
-import {} from "react-native-paper";
+import {
+  Provider,
+  Button,
+  Paragraph,
+  Dialog,
+  Portal,
+  IconButton,
+} from "react-native-paper";
 import SearchResults from "../components/SearchResults";
 import { Slider } from "@miblanchard/react-native-slider";
 import { LinearGradient } from "expo-linear-gradient";
+import call from "react-native-phone-call";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
+
 import color from "../components/colors";
+import AlertBox from "../components/AlertBox";
 
 const HomeScreen = ({ navigation }) => {
   const [budget, setBudget] = React.useState(3000);
   const [search, setSearch] = React.useState("");
+  const [copied, setCopied] = React.useState(false);
+  const [visible, setVisible] = React.useState(true);
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
 
-  const handleSearchReults = () => {
-    navigation.navigate("Map");
+  const handleSearchReults = (item) => {
+    showDialog();
+  };
+  const handleClipBoard = async ()=>{
+    await Clipboard.setStringAsync('0715280146');
+    setCopied(true)
+  }
+  const triggerCall = () => {
+    const args = {
+      number: "0715280146",
+      prompt: true,
+    };
+    call(args).catch(console.error);
   };
 
-  const handleSearch = () => {};
+  const renderItem = (item) => {
+    return (
+      <>
+        <SearchResults
+          imagesrc={adds2}
+          handleSearchReults={() => handleSearchReults(item)}
+        />
+      </>
+    );
+  };
+
+  const handleSearch = () => {
+    alert("Copied to Clipboard!");
+  };
   const add = require("../../assets/adds.jpg");
   const adds2 = require("../../assets/adds2.jpg");
-  const imagesrc = require("../../assets/icon.png");
 
   return (
-    <View style={styles.parentContainer}>
-      <View style={{}}>
-        {/* WELCOME TEXT */}
-        <LinearGradient
-          colors={[color.primary, color.third, "transparent"]}
-          style={styles.background}
-          start={{ x: -0.1, y: 0 }}
-          end={{ x: 1.5, y: 0.7 }}
-        >
-          <View>
-            <Text className={`text-lg text-center`} style={{}}>
-              {" "}
-              Welcome to Dishi!!
-            </Text>
-            <Text className={`text-lg text-center`}>
-              Get anymeal with any budget
-            </Text>
-          </View>
-        </LinearGradient>
-        {/* SEARCH BOX */}
+    <Provider>
+      <View style={styles.parentContainer}>
+        <Portal>
+          <Dialog visible={visible} onDismiss={hideDialog}>
+            <Dialog.Title>Restaurant Name</Dialog.Title>
+            <Dialog.Content>
+              <View className="flex flex-row justify-between ">
+                <Paragraph>Restaurant Contact : 0715280146</Paragraph>
+                {/* <IconButton 
+                    icon="copy"
+                    color={color.primary}
+                    size={14}
+                    onPress={() => triggerCall()}
 
-        <View style={styles.searchingContainer}>
-          <TextInput
-          className="px-5" 
-            placeholder="Search Food"
-            style={[styles.textInput]}
-            onChangeText={(text) => setSearch(text)}
-          ></TextInput>
-          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-            <Text style={{ color: color.third, paddingTop: 2 }}>Search</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* SLIDER */}
-
-        <View className="mx-2" style={styles.budgetSlider}>
-          <Text
-            style={[styles.budgetText, { color: color.primary }]}
-            className="p-1"
+                  /> */}
+                <TouchableOpacity
+                  className="flex flex-col justify-center items-center"
+                  onPress={handleClipBoard}
+                >
+                  <MaterialCommunityIcons
+                    name="clipboard-check-multiple-outline"
+                    size={24}
+                    color="black"
+                  />
+                  {copied && <Text>Copied</Text>}
+                </TouchableOpacity>
+              </View>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={()=> navigation.navigate("Map")}>Go</Button>
+              <Button onPress={hideDialog}>Cancel</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+        <View style={{}}>
+          {/* WELCOME TEXT */}
+          <LinearGradient
+            colors={[color.primary, color.third, "transparent"]}
+            style={styles.background}
+            start={{ x: -0.1, y: 0 }}
+            end={{ x: 1.5, y: 0.7 }}
           >
-            Sort by Price
-          </Text>
-          <Slider
-            value={budget}
-            onValueChange={(value) => setBudget(value)}
-            minimumValue={0}
-            maximumValue={3000}
-            step={50}
-            minimumTrackTintColor={color.secondary}
-            maximumTrackTintColor={color.disabled}
-            thumbTintColor={color.primary}
-          />
-          <Text className="m-2">Maximum Price: {budget}</Text>
-        </View>
-      </View>
-      <ScrollView style={styles.searchResultsContainer}>
-        <View style={styles.addsContainer}>
-          <Image source={add} style={{ width: "50%", height: "100%" }} />
-          <Image source={adds2} style={{ width: "50%", height: "100%" }} />
+            <View>
+              <Text className={`text-lg text-center`} style={{}}>
+                Welcome to Dishi!!
+              </Text>
+              <Text className={`text-lg text-center`}>
+                Get anymeal with any budget
+              </Text>
+            </View>
+          </LinearGradient>
+
+          {/* SEARCH BOX */}
+
+          <View style={styles.searchingContainer}>
+            <TextInput
+              className="px-5"
+              placeholder="Search Food"
+              style={[styles.textInput]}
+              onChangeText={(text) => setSearch(text)}
+            ></TextInput>
+            <TouchableOpacity
+              style={styles.searchButton}
+              onPress={handleSearch}
+            >
+              <Text style={{ color: color.third, paddingTop: 2 }}>Search</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* SLIDER */}
+
+          <View className="mx-2" style={styles.budgetSlider}>
+            <Text
+              style={[styles.budgetText, { color: color.primary }]}
+              className="p-1"
+            >
+              Sort by Price
+            </Text>
+            <Slider
+              value={budget}
+              onValueChange={(value) => setBudget(value)}
+              minimumValue={0}
+              maximumValue={3000}
+              step={50}
+              minimumTrackTintColor={color.secondary}
+              maximumTrackTintColor={color.disabled}
+              thumbTintColor={color.primary}
+            />
+            <Text className="m-2">Maximum Price: {budget}</Text>
+          </View>
         </View>
 
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
+        <FlatList
+          data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+          renderItem={({ item }) => (
+            <>
+              <Image source={add} style={{ width: 200, height: "100%" }} />
+              <Image source={adds2} style={{ width: 200, height: "100%" }} />
+            </>
+          )}
+          horizontal={true}
+          style={{ width: "100%", height: 250 }}
         />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
+
+        <FlatList
+          data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+          // style={styles.searchResultsContainer}
+          renderItem={({ item }) => renderItem(item)}
         />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
-        />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
-        />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
-        />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
-        />
-        <SearchResults
-          imagesrc={adds2}
-          handleSearchReults={handleSearchReults}
-        />
-      </ScrollView>
-    </View>
+      </View>
+    </Provider>
   );
 };
 
@@ -134,9 +194,6 @@ const styles = StyleSheet.create({
   searchingContainer: {
     height: 40,
     flexDirection: "row",
-  },
-  budgetSlider: {
-    // padding: 10,
   },
   textInput: {
     backgroundColor: "white",
@@ -158,17 +215,5 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
   },
-  addsContainer: {
-    justifyContent: "space-between",
-    columnGap: 2,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    width: "100%",
-    height: 160,
-    marginVertical: 0,
-  },
-  searchResultsContainer: {
-    flexWrap: "nowrap",
-    marginVertical: 0,
-  },
+  addsContainer: {},
 });

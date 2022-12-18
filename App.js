@@ -13,6 +13,7 @@ import Register from "./src/screens/Register";
 import Map from "./src/screens/Map";
 import Profile from "./src/screens/Profile";
 import FitnessTracker from "./src/screens/FitnessTracker";
+import ClipboardTutorial from "./src/components/ClipboardTutorial";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -43,6 +44,7 @@ const DrawerContainer = () => {
       <Drawer.Screen name="Map" component={Map} />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="FitnessTracker" component={FitnessTracker} />
+      <Drawer.Screen name="ClipboardTutorial" component={ClipboardTutorial} />
     </Drawer.Navigator>
   );
 };
