@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
@@ -17,14 +18,14 @@ import * as Location from "expo-location";
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [currLocation, setCurrLocation] = useState(null);
+  const [currLocation, setCurrLocation] = useState({
+    latitude: null,
+    longitude: null,
+  });
   const [DistanceRem, setDistanceRem] = useState(null);
   const [DurationRem, setDurationRem] = useState(null);
   const [modeDirections, setModeDirections] = useState("DRIVING");
 
-  const [visible, setVisible] = useState(false);
-
-  const origin = { latitude: -0.2761213, longitude: 36.054829 };
   const destination = { latitude: -0.2871213, longitude: 36.0854829 };
 
   const mapViewRef = React.useRef(null);
@@ -58,23 +59,24 @@ const Map = () => {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setErrorMsg("Permission to access location was denied");
+          return;
+        }
+
+        let locationCoords = await Location.getCurrentPositionAsync({});
+
+        setCurrLocation({
+          latitude: locationCoords.coords.latitude,
+          longitude: locationCoords.coords.longitude,
+        });
+        setLocation(locationCoords);
+      } catch (error) {
+        Alert.alert("Error", error.message);
       }
-
-      let locationCoords = await Location.getCurrentPositionAsync({});
-
-      setCurrLocation({
-        latitude: locationCoords.coords.latitude,
-        longitude: locationCoords.coords.longitude,
-      });
-      setLocation(locationCoords);
     })();
-    setInterval(() => {
-      setVisible(!visible);
-    }, 2000);
   }, []);
 
   let text = "Waiting..";
@@ -101,7 +103,10 @@ const Map = () => {
             <Marker coordinate={origin} />
             <Marker coordinate={currLocation} />
             <MapViewDirections
-              origin={origin}
+              origin={{
+                latitude: currLocation.latitude + 0.01,
+                longitude: currLocation.longitude + 0.01,
+              }}
               destination={destination}
               apikey="AIzaSyAOH7vGd4LbvlziEm-eFy7fh9BJBpjIut4"
               strokeWidth={3}
@@ -157,7 +162,11 @@ const Map = () => {
           </View>
         </>
       ) : (
-        <Text style={{ flex: 1 ,justifyContent:"center"}}>{text}</Text>
+        <Text
+          style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+        >
+          {text}
+        </Text>
       )}
     </View>
   );

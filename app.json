@@ -2,9 +2,9 @@
   "expo": {
     "name": "dishi-app",
     "slug": "dishi-app",
-    "version": "1.0.0",
+    "version": "1.1.5",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/dishiLogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/dishiLogo.png",
@@ -22,14 +22,14 @@
     },
     "android": {
       "package": "com.dishiapp.dishi",
-      "versionCode": 1,
+      "versionCode": 5,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/dishiLogo.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/dishiLogo.png"
     },
     "extra": {
       "eas": {

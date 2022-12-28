@@ -12,8 +12,6 @@ import auth from "../../firebase.js";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  getAuth,
 } from "firebase/auth";
 import {
   TextInput,
@@ -36,23 +34,10 @@ const Login = ({ navigation }) => {
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  React.useEffect(() => {
-    detectAuthChange();
-  }, []);
-
-  const detectAuthChange = () => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation.navigate("Drawer");
-      }
-    });
-  };
-
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
+        console.log("Logged in");
         navigation.navigate("Drawer");
       })
       .catch((error) => {
@@ -60,7 +45,6 @@ const Login = ({ navigation }) => {
         const errorMessage = error.message;
         Alert.alert("Login Failed", "Wrong Password or invalid email");
         console.log(errorCode, errorMessage);
-        // setVisible(true);
         setforgotPasswordText(true);
       });
   };

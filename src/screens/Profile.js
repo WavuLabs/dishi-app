@@ -5,14 +5,13 @@ import {
   View,
   FlatList,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { getAuth, updateProfile, sendPasswordResetEmail } from "firebase/auth";
 import { Provider, TextInput } from "react-native-paper";
 import color from "../components/colors.js";
 import AlertBox from "../components/AlertBox.js";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { TouchableHighlight } from "react-native";
 
 export default function Profile() {
   const [showUpdate, setshowUpdate] = React.useState(false);
@@ -30,9 +29,11 @@ export default function Profile() {
     })
       .then(() => {
         console.log("Profile updated!", user.displayName);
+        setshowUpdate(false);
       })
       .catch((error) => {
         console.log(error);
+        setshowUpdate(false);
       });
   };
 
@@ -49,16 +50,24 @@ export default function Profile() {
 
   return (
     <Provider>
-      <View style={{ flex: 1 }}>
-        <Button
-          title="Update Profile"
-          onPress={() => {
-            setshowUpdate(!showUpdate);
-          }}
-        />
+      <View style={{ flex: 1,  }}>
+        {!showUpdate && (
+          <TouchableOpacity
+            onPress={() => {
+              setshowUpdate(!showUpdate);
+            }}
+            // className="flex flex-col items-center justify-center p-1"
+            style={styles.ButtonUpdate}
+          >
+            <Text>Update Profile</Text>
+          </TouchableOpacity>
+        )}
 
         <View
-          className={`flex ${showUpdate ? "hidden" : ""} flex-col w-full py-10`}
+          className={`flex ${
+            showUpdate ? "" : "hidden"
+          } flex-col w-full justify-center`}
+          style={{ flex: 0.3, justifyContent: "center", alignItems: "center" }}
         >
           <TextInput
             mode="outlined"
@@ -78,8 +87,8 @@ export default function Profile() {
           />
           <TouchableOpacity
             onPress={handleUpdateProfile}
-            className="flex flex-col w-full p-1"
-            style={{ backgroundColor: color.primary, paddingHorizontal: 100 }}
+            // className="flex flex-col w-full p-1"
+            style={styles.Button}
           >
             <Text>Update Details</Text>
           </TouchableOpacity>
@@ -97,42 +106,34 @@ export default function Profile() {
         ) : (
           <></>
         )}
-
-        <FlatList
-          className="flex flex-col w-full"
-          ItemSeparatorComponent={
-            Platform.OS !== "android" &&
-            (({ highlighted }) => (
-              <View
-                style={[style.separator, highlighted && { marginLeft: 0 }]}
-              />
-            ))
-          }
-          horizontal={true}
-          data={[
-            { title: "Title Text", key: "item1" },
-            { title: "Title Text", key: "item1" },
-            { title: "Title Text", key: "item1" },
-            { title: "Title Text", key: "item1" },
-            { title: "Title Text", key: "item1" },
-          ]}
-          renderItem={({ item, index, separators }) => (
-            <TouchableHighlight
-              key={item.key}
-
-              onPress={() => {}}
-              onShowUnderlay={separators.highlight}
-              onHideUnderlay={separators.unhighlight}
-            >
-              <View style={{ backgroundColor: "white" }}>
-                <Text>{item.title}</Text>
-              </View>
-            </TouchableHighlight>
-          )}
-        />
       </View>
     </Provider>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  Button: {
+    backgroundColor: "#ffaa00",
+    borderColor: "#ffaa00",
+    color: "white",
+    padding: 10,
+    margin: 5,
+    width: "60%",
+    borderRadius: 5,
+  },
+  input: {
+    backgroundColor: "white",
+    width: "90%",
+    margin: 5,
+    borderRadius: 10,
+  },
+  ButtonUpdate: {
+    backgroundColor: color.secondary,
+    color: color.primary,
+    padding: 10,
+    margin: 5,
+    width: "100%",
+    borderRadius: 5,
+    alignSelf: "center",
+  },
+});
