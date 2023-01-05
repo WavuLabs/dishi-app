@@ -5,32 +5,51 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Restaurants</title>
+    <style>
+        tr,
+        th,
+        td {
+            padding: 10px;
+        }
+
+        tr {
+            border: 1px solid black;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            /* border-right: 1px solid black; */
+        }
+    </style>
 </head>
 
-<body>
+<body class="flex flex-col justify-center items-center">
     <div class="flex justify-center items-center">
         <h1 class="text-2xl font-bold">Restaurants</h1>
     </div>
-    <div class="flex justify-center items-center">
-        <button class="bg-blue-500 text-white rounded-md p-2 w-80">Add Restaurant</button>
-    </div>
-    <div class="flex justify-center items-center">
-        <table class="border">
+    <div class="flex flex-col items-center gap-4 w-1/2 h-screen ">
+        <div id="addMenuBtn" class="">
+            <button class="bg-blue-500 text-white rounded-md p-2 w-80" onclick="addMenu()">Add Menu</button>
+        </div>
+        <div id="addMenu" class="hidden" >
+            <input type="text" placeholder="Food Name" id="Food_Name" class="border-2 border-gray-300 rounded-md p-2 w-80">
+            <input type="text" placeholder="Price (Ksh)" id="Price" class="border-2 border-gray-300 rounded-md p-2 w-80">
+            <input type="text" placeholder="Food Description" id="Description" class="border-2 border-gray-300 rounded-md p-2 w-80">
+            <button onclick="addData()" class="bg-blue-500 text-white rounded-md p-2 w-80">Add Menu</button>
+        </div>
+        <table id="table" class="border">
+            <h1>Our Menus</h1>
             <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Email</th>
-            </tr>
-            <tr>
-                <td>Restaurant 1</td>
-                <td>Address 1</td>
-                <td>Phone 1</td>
-                <td>Email 1</td>
+                <th>Food Name</th>
+                <th>Price(Ksh)</th>
+                <th>Food Description</th>
             </tr>
         </table>
-
+    </div>
+    <script src="addRestaurants.js"></script>
 </body>
 
 </html>

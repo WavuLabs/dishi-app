@@ -13,10 +13,11 @@ const SearchResults = ({ imagesrc, handleSearchReults }) => {
         <Image source={imagesrc} style={{ width: "100%", height: "100%" }} />
       </View>
       <View style={styles.restaurantsDetails}>
+        <Text>Restaurant</Text>
+        <Text>Restaurant Rating</Text>
         <Text>Food Name</Text>
         <Text>Food Description</Text>
         <Text>Food Price</Text>
-        <Text>Food Rating</Text>
       </View>
     </TouchableOpacity>
   );
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     borderColor: color.primary,
     marginHorizontal: 10,
     marginVertical: 5,
-    height: 120,
+    height: 130,
     borderRadius: 5,
   },
   hotelImage: {

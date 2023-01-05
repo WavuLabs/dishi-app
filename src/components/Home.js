@@ -45,13 +45,11 @@ export default function Home() {
   };
 
   const triggerCall = () => {
-    const args = {
-      number: "9093900003", // String value with the number to call
-      prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call
-      skipCanOpen: true, // Skip the canOpenURL check
-    };
-
-    call(args).catch(console.error);
+    call({
+      number: "9093900003",
+      prompt: false,
+      skipCanOpen: false,
+    }).catch(console.error);
   };
 
   const renderItem = (item) => {
@@ -59,7 +57,7 @@ export default function Home() {
       <>
         <Restaraunts
           imagesrc={adds2}
-          handleSearchReults={() => handleSearchReults(item)}
+          handlePress={() => handleSearchReults(item)}
           RestarauntName={item.name}
           RestarauntDescription={item.description}
           RestarauntContacts={item.contacts}
@@ -96,15 +94,27 @@ export default function Home() {
                     {copied && <Text>Copied</Text>}
                   </TouchableOpacity>
                 </View>
-                <ButtonNative title="Make Phone Call" onPress={triggerCall} />
-                <ButtonNative
-                  title="Visit Restaurant"
-                  className="m-2"
-                  style={{ backgroundColor: color.primary, margin: 10 }}
-                  onPress={() => {
-                    Alert.alert("Visit Restaurant", "Coming Soon");
-                  }}
-                />
+                <View className="flex flex-col mt-3 justify-center items-center">
+                  <TouchableOpacity
+                    style={styles.AlertButton}
+                    onPress={triggerCall}
+                  >
+                    <Text className="text-center" style={""}>
+                      Make Phone Call
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.AlertButton}
+                    onPress={() => {
+                      Alert.alert("Visit Restaurant", "Coming Soon");
+                    }}
+                  >
+                    <Text className="text-center" style={""}>
+                      Visit Restaurant
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button
@@ -141,7 +151,6 @@ export default function Home() {
           </View>
 
           <FlatList
-            // style={{ paddingVertical: 5 }}
             data={data}
             renderItem={({ item }) => renderItem(item)}
           />
@@ -181,5 +190,13 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
   },
-  addsContainer: {},
+  AlertButton: {
+    backgroundColor: "#ffaa00",
+    borderColor: "#ffaa00",
+    color: "white",
+    padding: 10,
+    margin: 5,
+    width: "60%",
+    borderRadius: 5,
+  },
 });

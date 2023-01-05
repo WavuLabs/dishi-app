@@ -18,7 +18,8 @@ import * as Location from "expo-location";
 const Map = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [currLocation, setCurrLocation] = useState({
+  const [currLocation, setCurrLocation] = useState(null);
+  const [currLocation2, setCurrLocation2] = useState({
     latitude: null,
     longitude: null,
   });
@@ -26,18 +27,17 @@ const Map = () => {
   const [DurationRem, setDurationRem] = useState(null);
   const [modeDirections, setModeDirections] = useState("DRIVING");
 
-  const destination = { latitude: -0.2871213, longitude: 36.0854829 };
-
   const mapViewRef = React.useRef(null);
 
   const moveCamera = async () => {
     const camera = await mapViewRef.current?.getCamera();
     if (camera) {
-      camera.center = origin;
+      camera.center = currLocation2;
       mapViewRef.current?.animateCamera(camera, { duration: 1000 });
     } //if camera
     console.log("Moved");
   };
+
   const edgePaddingConst = {
     top: 50,
     right: 50,
@@ -46,7 +46,7 @@ const Map = () => {
   };
 
   const handleTraceRoute = () => {
-    mapViewRef.current?.fitToCoordinates([origin, destination], {
+    mapViewRef.current?.fitToCoordinates([currLocation, currLocation2], {
       edgePadding: edgePaddingConst,
       animated: true,
     });
@@ -67,12 +67,17 @@ const Map = () => {
         }
 
         let locationCoords = await Location.getCurrentPositionAsync({});
+        setLocation(locationCoords);
 
         setCurrLocation({
           latitude: locationCoords.coords.latitude,
           longitude: locationCoords.coords.longitude,
         });
-        setLocation(locationCoords);
+        setCurrLocation2({
+          latitude: locationCoords.coords.latitude + 0.09,
+          longitude: locationCoords.coords.longitude + 0.09,
+        });
+        
       } catch (error) {
         Alert.alert("Error", error.message);
       }
@@ -100,23 +105,17 @@ const Map = () => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
-            <Marker coordinate={origin} />
+            <Marker coordinate={currLocation2} />
             <Marker coordinate={currLocation} />
             <MapViewDirections
-              origin={{
-                latitude: currLocation.latitude + 0.01,
-                longitude: currLocation.longitude + 0.01,
-              }}
-              destination={destination}
+              origin={currLocation}
+              destination={currLocation2}
               apikey="AIzaSyAOH7vGd4LbvlziEm-eFy7fh9BJBpjIut4"
               strokeWidth={3}
               strokeColor="hotpink"
               mode={modeDirections}
               optimizeWaypoints={true}
               onStart={(params) => {
-                // console.log(
-                //   `Started routing between "${params.origin}" and "${params.destination}"`
-                // );
                 handleTraceRoute();
               }}
               onReady={(result) => {

@@ -16,7 +16,6 @@ import {
   Paragraph,
   Dialog,
   Portal,
-  BottomNavigation,
 } from "react-native-paper";
 import SearchResults from "../components/SearchResults";
 import { Slider } from "@miblanchard/react-native-slider";
@@ -25,8 +24,76 @@ import call from "react-native-phone-call";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import color from "./colors";
+import RangeSlider from "rn-range-slider";
 
-const Search = ({ navigation }) => {
+function BudgetSlider() {
+  const [rangeLow, setRangeLow] = React.useState(50);
+  const [rangeHigh, setRangeHigh] = React.useState(5000);
+
+  return (
+    <View style={{}}>
+      <RangeSlider
+        style={{ marginLeft:10,width: "100%", height: 30 }}
+        min={0}
+        max={10000}
+        step={10}
+        selectionColor="#5d78ff"
+        floatingLabel={true}
+        blankColor="#f5f5f5"
+        onValueChanged={(low, high, fromUser) => {
+          setRangeLow(low);
+          setRangeHigh(high);
+        }}
+        renderThumb={() => {
+          return (
+            <View
+              style={{
+                height: 25,
+                width: 25,
+                borderRadius: 15,
+                backgroundColor: color.primary,
+              }}
+            />
+          );
+        }}
+        renderRail={() => {
+          return (
+            <View
+              style={{
+                height: 3,
+                flex: 1,
+                backgroundColor: color.secondary,
+              }}
+            />
+          );
+        }}
+        renderRailSelected={() => {
+          return (
+            <View
+              style={{
+                height: 3,
+                flex: 1,
+                backgroundColor: "#967639",
+              }}
+            />
+          );
+        }}
+      />
+      <View className=" flex flex-row justify-start items-center m-2">
+        <Text> Minimum Price : </Text>
+        <Text style={{ color: color.secondary }} className="text-xl">
+          {rangeLow}
+        </Text>
+        <Text> Maximum Price : </Text>
+        <Text style={{ color: color.secondary }} className="text-xl">
+          {rangeHigh}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+const Search = () => {
   const [budget, setBudget] = React.useState(3000);
   const [search, setSearch] = React.useState("");
   const [copied, setCopied] = React.useState(false);
@@ -48,18 +115,12 @@ const Search = ({ navigation }) => {
   };
 
   const triggerCall = () => {
-    const args = {
-      number: "0715280146",
-      prompt: true,
-    };
-    call(args).catch(
-      Alert.alert(
-        "Call Failed",
-        "Call Failed \n Copy number to clipboard (click on the clipboard icon)"
-      )
-    );
+    call({
+      number: "9093900003",
+      prompt: false,
+      skipCanOpen: false,
+    }).catch(console.error);
   };
-
   const renderItem = (item) => {
     return (
       <>
@@ -98,15 +159,27 @@ const Search = ({ navigation }) => {
                     {copied && <Text>Copied</Text>}
                   </TouchableOpacity>
                 </View>
-                <ButtonNative title="Make Phone Call" onPress={triggerCall} />
-                <ButtonNative
-                  title="Visit Restaurant"
-                  className="m-2"
-                  style={{ backgroundColor: color.primary, margin: 10 }}
-                  onPress={() => {
-                    Alert.alert("Visit Restaurant", "Coming Soon");
-                  }}
-                />
+                <View className="flex flex-col mt-3 justify-center items-center">
+                  <TouchableOpacity
+                    style={styles.AlertButton}
+                    onPress={triggerCall}
+                  >
+                    <Text className="text-center" style={""}>
+                      Make Phone Call
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.AlertButton}
+                    onPress={() => {
+                      Alert.alert("Visit Restaurant", "Coming Soon");
+                    }}
+                  >
+                    <Text className="text-center" style={""}>
+                      Visit Restaurant
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </Dialog.Content>
               <Dialog.Actions>
                 <Button
@@ -167,17 +240,7 @@ const Search = ({ navigation }) => {
               >
                 Sort by Price
               </Text>
-              <Slider
-                value={budget}
-                onValueChange={(value) => setBudget(value)}
-                minimumValue={0}
-                maximumValue={3000}
-                step={50}
-                minimumTrackTintColor={color.secondary}
-                maximumTrackTintColor={color.disabled}
-                thumbTintColor={color.primary}
-              />
-              <Text className="m-2">Maximum Price: {budget}</Text>
+              <BudgetSlider />
             </View>
           </View>
 
@@ -222,6 +285,15 @@ const styles = StyleSheet.create({
   searchingContainer: {
     height: 40,
     flexDirection: "row",
+  },
+  AlertButton: {
+    backgroundColor: "#ffaa00",
+    borderColor: "#ffaa00",
+    color: "white",
+    padding: 10,
+    margin: 5,
+    width: "60%",
+    borderRadius: 5,
   },
   textInput: {
     backgroundColor: "white",

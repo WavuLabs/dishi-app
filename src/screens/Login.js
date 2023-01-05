@@ -120,7 +120,7 @@ const Login = ({ navigation }) => {
             </TouchableOpacity>
           )}
           <TouchableOpacity
-            style={[styles.buttons, styles.loginButton]}
+            style={styles.loginButton}
             onPress={handleLogin}
           >
             <Text className="text-center" style={""}>
@@ -200,9 +200,6 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 10,
     backgroundColor: "white",
-  },
-  buttons: {
-    padding: 10,
   },
   loginButton: {
     backgroundColor: "#ffaa00",

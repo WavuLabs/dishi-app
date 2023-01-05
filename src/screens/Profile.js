@@ -6,6 +6,7 @@ import {
   FlatList,
   Platform,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import React from "react";
 import { getAuth, updateProfile, sendPasswordResetEmail } from "firebase/auth";
@@ -50,7 +51,7 @@ export default function Profile() {
 
   return (
     <Provider>
-      <View style={{ flex: 1,  }}>
+      <View style={{flex: 1}}>
         {!showUpdate && (
           <TouchableOpacity
             onPress={() => {
@@ -63,11 +64,11 @@ export default function Profile() {
           </TouchableOpacity>
         )}
 
-        <View
+        <KeyboardAvoidingView behavior="height"
           className={`flex ${
             showUpdate ? "" : "hidden"
-          } flex-col w-full justify-center`}
-          style={{ flex: 0.3, justifyContent: "center", alignItems: "center" }}
+          } flex-col w-full`}
+          style={{ justifyContent: "center", alignItems: "center" }}
         >
           <TextInput
             mode="outlined"
@@ -92,12 +93,15 @@ export default function Profile() {
           >
             <Text>Update Details</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
 
-        <Button
-          title="Reset Password with Email"
-          onPress={handleResetPassword}
-        />
+        <TouchableOpacity
+            onPress={handleResetPassword}
+            style={[styles.Button, {backgroundColor: color.secondary }]}
+          >
+            <Text>Reset Password with Email</Text>
+          </TouchableOpacity>
+
         {showResetPassword ? (
           <AlertBox
             AlertTitle="Succefully"
