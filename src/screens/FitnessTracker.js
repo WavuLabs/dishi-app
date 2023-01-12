@@ -7,6 +7,7 @@ import {
   Dialog,
   Portal,
 } from "react-native-paper";
+import color from "../components/colors";
 
 export default function FitnessTracker({ navigation }) {
   const [visible, setVisible] = React.useState(true);
@@ -34,7 +35,7 @@ export default function FitnessTracker({ navigation }) {
                 onPress={() => {
                   navigation.goBack();
                   hideDialog();
-                  showDialog()
+                  showDialog();
                 }}
               >
                 Cancel

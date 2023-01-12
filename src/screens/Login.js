@@ -6,6 +6,7 @@ import {
   View,
   Image,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import auth from "../../firebase.js";
@@ -21,31 +22,64 @@ import {
   Portal,
   Provider,
 } from "react-native-paper";
-
 import color from "../components/colors.js";
+import LottiePreloader from "../components/LottiePreloader.js";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("walterayiego@gmail.com");
   const [password, setPassword] = React.useState("walt1234");
   const [secure, setSecure] = React.useState(true);
   const [visible, setVisible] = React.useState(false);
+  const [visible2, setVisible2] = React.useState(false);
   const [forgotPasswordText, setforgotPasswordText] = React.useState(false);
 
   const showDialog = () => setVisible(true);
+  const showDialog2 = () => setVisible2(true);
   const hideDialog = () => setVisible(false);
+  const hideDialog2 = () => setVisible2(false);
 
   const handleLogin = () => {
+    showDialog2();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         console.log("Logged in");
         navigation.navigate("Drawer");
+        hideDialog2();
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert("Login Failed", "Wrong Password or invalid email");
-        console.log(errorCode, errorMessage);
+        hideDialog2();
         setforgotPasswordText(true);
+        if (error.code === "auth/invalid-email") {
+          Alert.alert(
+            "Login Failed",
+            "The email address is not formatted correctly."
+          );
+        }
+        if (error.code === "auth/wrong-password") {
+          Alert.alert(
+            "Login Failed",
+            "The password is invalid for the given email address."
+          );
+        }
+        if (error.code === "auth/user-not-found") {
+          Alert.alert(
+            "Login Failed",
+            "User not Found. Please check your email address and try again."
+          );
+        }
+        if (error.code === "auth/user-disabled") {
+          Alert.alert(
+            "Login Failed",
+            "The user account has been disabled by an administrator."
+          );
+        }
+        if (error.code === "auth/network-request-failed") {
+          Alert.alert(
+            "Login Failed",
+            "Network request failed. Please check your internet connection and try again."
+          );
+        } 
+
       });
   };
 
@@ -61,6 +95,7 @@ const Login = ({ navigation }) => {
 
   return (
     <Provider>
+      {visible2 && <LottiePreloader />}
       <View style={styles.container}>
         <Image
           source={require("../../assets/dishiLogo.png")}
@@ -101,6 +136,7 @@ const Login = ({ navigation }) => {
             />
           </View>
         </KeyboardAvoidingView>
+
         <View style={styles.buttonContainer}>
           {forgotPasswordText && (
             <TouchableOpacity
@@ -119,10 +155,7 @@ const Login = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={handleLogin}
-          >
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text className="text-center" style={""}>
               LogIn
             </Text>
@@ -177,7 +210,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: color.third,
-    // justifyContent: "center",
   },
   inputContainer: {
     flexDirection: "column",

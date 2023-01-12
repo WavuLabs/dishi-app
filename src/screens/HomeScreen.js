@@ -1,29 +1,14 @@
 import * as React from "react";
 import { BottomNavigation } from "react-native-paper";
-import * as Location from "expo-location";
 
 import color from "../components/colors";
 import Home from "../components/Home";
 import Search from "../components/Search";
 
 const HomeScreen = ({ navigation }) => {
-  const [location, setLocation] = React.useState(null);
-  const [errorMsg, setErrorMsg] = React.useState(null);
   const [index, setIndex] = React.useState(0);
   
-  React.useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
 
-      let locationCoords = await Location.getCurrentPositionAsync({});
-      setLocation(locationCoords.coords);
-    })();
-  }, []);
-  location && console.log(location);
   
   const [routes] = React.useState([
     {

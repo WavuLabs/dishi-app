@@ -1,20 +1,19 @@
 import {
   StyleSheet,
-  Button,
   Text,
   View,
-  FlatList,
-  Platform,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
 import React from "react";
 import { getAuth, updateProfile, sendPasswordResetEmail } from "firebase/auth";
-import { Provider, TextInput } from "react-native-paper";
+import { Provider, TextInput, Avatar } from "react-native-paper";
 import color from "../components/colors.js";
 import AlertBox from "../components/AlertBox.js";
+import LottiePreloader from "../components/LottiePreloader.js";
 
 export default function Profile() {
+  const [show, setShow] = React.useState(true);
   const [showUpdate, setshowUpdate] = React.useState(false);
   const [showResetPassword, setShowResetPassword] = React.useState(false);
   const auth = getAuth();
@@ -51,7 +50,22 @@ export default function Profile() {
 
   return (
     <Provider>
-      <View style={{flex: 1}}>
+      {show ? <View style={{ flex: 1 }}>
+        <View className=" p-5 flex-row">
+          <Avatar.Image
+            size={150}
+            source={{ uri: auth.currentUser?.photoURL }}
+          />
+          <View className=" ml-5 w-full justify-center">
+            <Text style={{ fontSize: 18, color: color.secondary, }}>
+              Hello {auth.currentUser?.displayName}
+            </Text>
+            <Text style={{ fontSize: 15 }}>
+              Email : <Text>{auth.currentUser?.email}</Text>
+            </Text>
+          </View>
+        </View>
+
         {!showUpdate && (
           <TouchableOpacity
             onPress={() => {
@@ -64,10 +78,9 @@ export default function Profile() {
           </TouchableOpacity>
         )}
 
-        <KeyboardAvoidingView behavior="height"
-          className={`flex ${
-            showUpdate ? "" : "hidden"
-          } flex-col w-full`}
+        <KeyboardAvoidingView
+          behavior="height"
+          className={`flex ${showUpdate ? "" : "hidden"} flex-col w-full`}
           style={{ justifyContent: "center", alignItems: "center" }}
         >
           <TextInput
@@ -86,21 +99,33 @@ export default function Profile() {
             onChangeText={(text) => setSecondName(text)}
             style={styles.input}
           />
-          <TouchableOpacity
-            onPress={handleUpdateProfile}
-            // className="flex flex-col w-full p-1"
-            style={styles.Button}
-          >
-            <Text>Update Details</Text>
-          </TouchableOpacity>
+          <View className="flex flex-row w-full">
+            <TouchableOpacity
+              onPress={handleUpdateProfile}
+              // className="flex flex-col w-full p-1"
+              style={styles.Button}
+            >
+              <Text>Update Details</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setshowUpdate(!showUpdate);
+              }}
+              // className="flex flex-col w-full p-1"
+              style={styles.Button}
+            >
+              <Text>Cancel</Text>
+            </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
 
         <TouchableOpacity
-            onPress={handleResetPassword}
-            style={[styles.Button, {backgroundColor: color.secondary }]}
-          >
-            <Text>Reset Password with Email</Text>
-          </TouchableOpacity>
+          onPress={handleResetPassword}
+          style={styles.ButtonUpdate}
+        >
+          <Text>Reset Password with Email</Text>
+        </TouchableOpacity>
 
         {showResetPassword ? (
           <AlertBox
@@ -110,7 +135,7 @@ export default function Profile() {
         ) : (
           <></>
         )}
-      </View>
+      </View> : <LottiePreloader/>} 
     </Provider>
   );
 }
@@ -122,8 +147,10 @@ const styles = StyleSheet.create({
     color: "white",
     padding: 10,
     margin: 5,
-    width: "60%",
+    width: "45%",
     borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     backgroundColor: "white",
@@ -139,5 +166,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     alignSelf: "center",
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

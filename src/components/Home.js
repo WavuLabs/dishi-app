@@ -1,55 +1,126 @@
 import {
   StyleSheet,
-  Text,
   View,
-  Image,
-  TouchableOpacity,
-  FlatList,
+  Dimensions,
+  Animated,
+  Platform,
   Alert,
-  Button as ButtonNative,
 } from "react-native";
 import * as React from "react";
-import {
-  Provider,
-  Button,
-  Paragraph,
-  Dialog,
-  Portal,
-} from "react-native-paper";
-import { LinearGradient } from "expo-linear-gradient";
-import call from "react-native-phone-call";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as Clipboard from "expo-clipboard";
+import MapView, { Callout, Marker } from "react-native-maps";
+import * as Location from "expo-location";
 
 import color from "./colors";
 import Restaraunts from "./Restaraunts";
 import data from "./data";
+import LottiePreloader from "./LottiePreloader";
+import StarRating from "./StarRating";
+
+const add = require("../../assets/adds.jpg");
+const adds2 = require("../../assets/adds2.jpg");
+
+const { width, height } = Dimensions.get("window");
+const CARD_HEIGHT = 220;
+const CARD_WIDTH = width * 0.8;
+const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.01922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function Home() {
-  const [copied, setCopied] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
+  const [region, setRegion] = React.useState(null);
+  const [currLocation, setCurrLocation] = React.useState(null);
+  const [state, setState] = React.useState(data);
 
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const _map = React.useRef(null);
+  const flatlist_ref = React.useRef(null);
 
-  const add = require("../../assets/adds.jpg");
-  const adds2 = require("../../assets/adds2.jpg");
+  let mapIndex = 0;
+  let mapAnimation = new Animated.Value(0);
+
+  const interpolations = state.map((data, index) => {
+    const inputRange = [
+      (index - 1) * CARD_WIDTH,
+      index * CARD_WIDTH,
+      (index + 1) * CARD_WIDTH,
+    ];
+
+    const scale = mapAnimation.interpolate({
+      inputRange,
+      outputRange: [1, 1.5, 1],
+      extrapolate: "clamp",
+    });
+    return { scale };
+  });
+
+  const onMarkerPress = (mapEventData) => {
+    const markerID = mapEventData._targetInst.return.key;
+
+    let x = markerID * CARD_WIDTH + markerID * 20;
+    if (Platform.OS === "ios") {
+      x = x - SPACING_FOR_CARD_INSET;
+    }
+
+    flatlist_ref.current.scrollToIndex({ index: markerID, animated: true });
+  };
+
+  const regionTimeoutRef = React.useRef(null);
+
+  React.useEffect(() => {
+    mapAnimation.addListener(({ value }) => {
+      let index = Math.floor(value / CARD_WIDTH + 0.3);
+      if (index >= state.length) {
+        index = state.length - 1;
+      }
+      if (index <= 0) {
+        index = 0;
+      }
+      clearTimeout(regionTimeoutRef.current);
+
+      regionTimeoutRef.current = setTimeout(() => {
+        if (mapIndex !== index) {
+          mapIndex = index;
+          const { coordinate } = state[index];
+          _map.current.animateToRegion(
+            {
+              ...coordinate,
+              latitudeDelta: region.latitudeDelta,
+              longitudeDelta: region.longitudeDelta,
+            },
+            500
+          );
+        }
+      }, 10);
+    });
+  });
+
+  React.useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        return Alert.alert("Permission to access location was denied");
+      }
+
+      let locationCoords = await Location.getCurrentPositionAsync({});
+      setCurrLocation(locationCoords.coords);
+      setRegion({
+        latitude: locationCoords.coords.latitude,
+        longitude: locationCoords.coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+    })();
+  }, []);
+
+  const onUserLocationChange = (event) => {
+    setRegion({
+      ...region,
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude,
+    });
+  };
 
   const handleSearchReults = (item) => {
-    showDialog();
-  };
-
-  const handleClipBoard = async () => {
-    await Clipboard.setStringAsync("0715280146");
-    setCopied(true);
-  };
-
-  const triggerCall = () => {
-    call({
-      number: "9093900003",
-      prompt: false,
-      skipCanOpen: false,
-    }).catch(console.error);
   };
 
   const renderItem = (item) => {
@@ -59,116 +130,135 @@ export default function Home() {
           imagesrc={adds2}
           handlePress={() => handleSearchReults(item)}
           RestarauntName={item.name}
-          RestarauntDescription={item.description}
           RestarauntContacts={item.contacts}
-          RestarauntRatings={item.ratings}
+          StarRatingProp={StarRating(item)}
         />
       </>
     );
   };
-
-  const handleSearch = () => {
-    Alert.alert("Search Results", "Coming Soon");
-  };
-
   return (
-    <>
-      <Provider>
-        <View style={styles.parentContainer}>
-          <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog}>
-              <Dialog.Title>Restaurant Name</Dialog.Title>
-              <Dialog.Content>
-                <View className="flex flex-row justify-between ">
-                  <Paragraph>Restaurant Contact : 0715280146</Paragraph>
-
-                  <TouchableOpacity
-                    className="flex flex-col justify-center items-center"
-                    onPress={handleClipBoard}
-                  >
-                    <MaterialCommunityIcons
-                      name="clipboard-check-multiple-outline"
-                      size={24}
-                      color="black"
-                    />
-                    {copied && <Text>Copied</Text>}
-                  </TouchableOpacity>
-                </View>
-                <View className="flex flex-col mt-3 justify-center items-center">
-                  <TouchableOpacity
-                    style={styles.AlertButton}
-                    onPress={triggerCall}
-                  >
-                    <Text className="text-center" style={""}>
-                      Make Phone Call
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.AlertButton}
-                    onPress={() => {
-                      Alert.alert("Visit Restaurant", "Coming Soon");
-                    }}
-                  >
-                    <Text className="text-center" style={""}>
-                      Visit Restaurant
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </Dialog.Content>
-              <Dialog.Actions>
-                <Button
-                  style={{ backgroundColor: color.primary }}
-                  onPress={() => {
-                    Alert.alert("Visit Restaurant", "Coming Soon");
+    <View style={styles.parentContainer}>
+      {currLocation ? (
+        <>
+          <MapView
+            ref={_map}
+            style={styles.map}
+            initialRegion={region}
+            showsUserLocation={true}
+            onUserLocationChange={onUserLocationChange}
+            showsMyLocationButton={true}
+            showsPointsOfInterest={false}
+            showsCompass={true}
+          >
+            {state.map((item, index) => {
+              const scaleStyle = {
+                transform: [
+                  {
+                    scale: interpolations[index].scale,
+                  },
+                ],
+              };
+              return (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: item.coordinate.latitude,
+                    longitude: item.coordinate.longitude,
                   }}
+                  pinColor={color.primary}
+                  onPress={(e) => onMarkerPress(e)}
+                  title={item.name}
                 >
-                  Go
-                </Button>
-
-                <Button onPress={hideDialog}>Cancel</Button>
-              </Dialog.Actions>
-            </Dialog>
-          </Portal>
-
-          <View style={{}}>
-            {/* WELCOME TEXT */}
-            <LinearGradient
-              colors={[color.primary, color.third, "transparent"]}
-              style={styles.background}
-              start={{ x: -0.1, y: 0 }}
-              end={{ x: 1.5, y: 0.7 }}
-            >
-              <View>
-                <Text className={`text-lg text-center`} style={{}}>
-                  Welcome to Dishi!!
-                </Text>
-                <Text className={`text-lg text-center`}>
-                  Restaraunts near you
-                </Text>
-              </View>
-            </LinearGradient>
+                  {/* <Callout>
+                    <Text>{item.name}</Text>
+                  </Callout> */}
+                  <Animated.View style={[styles.markerWrap, ]}>
+                    <Animated.Image
+                      source={require("../../assets/map_marker.png")}
+                      style={[styles.marker, scaleStyle]}
+                      resizeMode="cover"
+                    />
+                  </Animated.View>
+                </Marker>
+              );
+            })}
+          </MapView>
+          <View style={styles.flatListRestaurants}>
+            <Animated.FlatList
+              data={data}
+              ref={flatlist_ref}
+              style={styles.flatList}
+              renderItem={({ item }) => renderItem(item)}
+              horizontal={true}
+              contentInset={{
+                top: 0,
+                left: SPACING_FOR_CARD_INSET,
+                bottom: 0,
+                right: SPACING_FOR_CARD_INSET,
+              }}
+              contentContainerStyle={{
+                paddingHorizontal:
+                  Platform.OS === "android" ? SPACING_FOR_CARD_INSET : 0,
+              }}
+              pagingEnabled
+              scrollEventThrottle={1}
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={CARD_WIDTH + 20}
+              snapToAlignment="center"
+              onScroll={Animated.event(
+                [
+                  {
+                    nativeEvent: {
+                      contentOffset: {
+                        x: mapAnimation,
+                      },
+                    },
+                  },
+                ],
+                { useNativeDriver: true }
+              )}
+            />
           </View>
-
-          <FlatList
-            data={data}
-            renderItem={({ item }) => renderItem(item)}
-          />
-        </View>
-      </Provider>
-    </>
+        </>
+      ) : (
+        <LottiePreloader />
+      )}
+    </View>
   );
 }
-
+const flatListRestaurantsHeight = 250;
 const styles = StyleSheet.create({
   parentContainer: {
     flex: 1,
     backgroundColor: color.third,
     color: color.primary,
   },
-  searchingContainer: {
-    height: 40,
+  flatListRestaurants: {
+    position: "absolute",
+    height: flatListRestaurantsHeight,
+    width: "100%",
+    bottom: 0,
+    backgroundColor: color.secondary,
+    borderTopEndRadius: 10,
     flexDirection: "row",
+  },
+  map: {
+    width: width,
+    height: height - flatListRestaurantsHeight,
+  },
+  markerWrap: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+  },
+  marker: {
+    width: 30,
+    height: 30,
+  },
+  flatList: {
+    flex: 1,
+    backgroundColor: "white",
   },
   textInput: {
     backgroundColor: "white",

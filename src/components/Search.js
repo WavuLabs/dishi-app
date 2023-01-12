@@ -33,7 +33,7 @@ function BudgetSlider() {
   return (
     <View style={{}}>
       <RangeSlider
-        style={{ marginLeft:10,width: "100%", height: 30 }}
+        style={{ marginLeft: 10, width: "100%", height: 30 }}
         min={0}
         max={10000}
         step={10}
@@ -246,10 +246,16 @@ const Search = () => {
 
           <FlatList
             data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            className="rounded-t-xl"
+            style={{ borderTopRightRadius: 20, borderTopLeftRadius: 20 }}
             renderItem={({ item }) => renderItem(item)}
             ListHeaderComponent={
               <FlatList
                 data={[1, 2]}
+                style={{
+                  width: "100%",
+                  height: 150,
+                }}
                 renderItem={({ item }) => (
                   <>
                     <Image
@@ -263,7 +269,6 @@ const Search = () => {
                   </>
                 )}
                 horizontal={true}
-                style={{ width: "100%", height: 150 }}
               />
             }
           />

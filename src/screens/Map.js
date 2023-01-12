@@ -1,18 +1,19 @@
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
 import React, { useState, useEffect } from "react";
 import {
-  Platform,
   Dimensions,
   Text,
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Alert,
 } from "react-native";
 import MapViewDirections from "react-native-maps-directions";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
+
+import LottiePreloader from "../components/LottiePreloader";
+import color from "../components/colors";
 // import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Map = () => {
@@ -34,18 +35,16 @@ const Map = () => {
     if (camera) {
       camera.center = currLocation2;
       mapViewRef.current?.animateCamera(camera, { duration: 1000 });
-    } //if camera
-    console.log("Moved");
-  };
-
-  const edgePaddingConst = {
-    top: 50,
-    right: 50,
-    bottom: 50,
-    left: 50,
+    }
   };
 
   const handleTraceRoute = () => {
+    const edgePaddingConst = {
+      top: 50,
+      right: 50,
+      bottom: 50,
+      left: 50,
+    };
     mapViewRef.current?.fitToCoordinates([currLocation, currLocation2], {
       edgePadding: edgePaddingConst,
       animated: true,
@@ -62,8 +61,7 @@ const Map = () => {
       try {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-          return;
+          return Alert.alert("Permission to access location was denied");
         }
 
         let locationCoords = await Location.getCurrentPositionAsync({});
@@ -74,23 +72,15 @@ const Map = () => {
           longitude: locationCoords.coords.longitude,
         });
         setCurrLocation2({
-          latitude: locationCoords.coords.latitude + 0.09,
-          longitude: locationCoords.coords.longitude + 0.09,
+          latitude: locationCoords.coords.latitude,
+          longitude: locationCoords.coords.longitude + 0.03,
         });
-        
       } catch (error) {
         Alert.alert("Error", error.message);
       }
     })();
   }, []);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-    // console.log(currLocation);
-  }
   return (
     <View style={styles.container}>
       {currLocation ? (
@@ -105,11 +95,14 @@ const Map = () => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
           >
-            <Marker coordinate={currLocation2} />
+            <Marker coordinate={currLocation2} pinColor={color.primary} />
             <Marker coordinate={currLocation} />
             <MapViewDirections
               origin={currLocation}
-              destination={currLocation2}
+              destination={{
+                latitude: currLocation2.latitude,
+                longitude: currLocation2.longitude,
+              }}
               apikey="AIzaSyAOH7vGd4LbvlziEm-eFy7fh9BJBpjIut4"
               strokeWidth={3}
               strokeColor="hotpink"
@@ -123,7 +116,7 @@ const Map = () => {
                 setDurationRem(`Duration: ${Math.ceil(result.duration)} min.`);
               }}
               onError={(errorMessage) => {
-                console.log(errorMessage);
+                Alert.alert("Error", errorMessage);
               }}
             />
           </MapView>
@@ -161,11 +154,7 @@ const Map = () => {
           </View>
         </>
       ) : (
-        <Text
-          style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
-        >
-          {text}
-        </Text>
+        <LottiePreloader />
       )}
     </View>
   );

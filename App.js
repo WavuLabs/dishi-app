@@ -7,13 +7,15 @@ import color from "./src/components/colors";
 import { StatusBar } from "expo-status-bar";
 import auth from "./firebase.js";
 
-import CustomDrawerContent from "./src/components/CustomDrawerContent";
 import HomeScreen from "./src/screens/HomeScreen";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
 import Map from "./src/screens/Map";
 import Profile from "./src/screens/Profile";
 import FitnessTracker from "./src/screens/FitnessTracker";
+import CustomDrawerContent from "./src/components/CustomDrawerContent";
+// import MapOnly from "./src/components/MapOnly";
+// import Animscreen from "./src/components/Animscreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -32,6 +34,10 @@ const StackContainer = () => {
           },
           headerTitleStyle: {
             color: color.third,
+            fontWeight: "bold",
+            textAlign: "center",
+            alignSelf: "center",
+            flex: 1,
           },
           headerShown: false,
         }}
@@ -71,7 +77,7 @@ const DrawerContainer = () => {
         options={{ title: "Dishi" }}
       />
       <Drawer.Screen name="Register" component={Register} />
-      <Drawer.Screen name="Map" component={Map} />
+      {/* <Drawer.Screen name="Animscreen" component={Animscreen} /> */}
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="FitnessTracker" component={FitnessTracker} />
     </Drawer.Navigator>
@@ -94,8 +100,8 @@ function App() {
     });
     return ifLoggedIn;
   }, []);
-  
-  return ( 
+
+  return (
     <>
       {isLoaded && <StackContainer />}
       <StatusBar style="dark" hidden={false} />

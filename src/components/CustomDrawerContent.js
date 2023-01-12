@@ -48,14 +48,6 @@ const CustomDrawerContent = ({ navigation }, props) => {
       >
         <Text>Profile</Text>
       </TouchableOpacity>
-      
-      {/* <TouchableOpacity
-        className="flex flex-col p-3 justify-center w-strerch bottom-0"
-        onPress={()=> navigation.navigate("Map")}
-      >
-        <Text>Map</Text>
-      </TouchableOpacity> */}
-      
 
       <TouchableOpacity
         className="flex flex-col p-3 justify-center w-strerch bottom-0"
